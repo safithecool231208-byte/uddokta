@@ -1,360 +1,425 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Dashboard | Student Payment Portal</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Uddokta Students Interface</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
-<style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
-body{
-  background:linear-gradient(135deg,#667eea,#764ba2);
-  min-height:100vh;
-  padding:15px;
-  display:flex;
-  justify-content:center;
-}
-.dashboard-container{
-  width:100%;
-  max-width:1200px;
-  display:flex;
-  flex-direction:column;
-  gap:20px;
-}
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
 
-/* Header */
-.dashboard-header{
-  background:rgba(255,255,255,0.95);
-  border-radius:20px;
-  padding:15px 20px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  box-shadow:0 8px 20px rgba(0,0,0,0.15);
-  flex-wrap:wrap;
-  gap:10px;
-}
-.dashboard-header h1{font-size:1.3rem;color:#2c3e50;}
-.dashboard-header p{color:#7f8c8d;font-size:0.9rem;}
-.logout-btn{
-  background:#e74c3c;color:#fff;border:none;padding:10px 18px;
-  border-radius:10px;font-weight:500;cursor:pointer;transition:0.3s;
-}
-.logout-btn:hover{background:#c0392b;transform:translateY(-2px);}
-
-/* Layout Grid */
-.dashboard-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:20px;
-}
-@media(max-width:950px){
-  .dashboard-grid{grid-template-columns:1fr;gap:15px;}
-}
-
-/* Submit Box - Visa Card Style */
-.payment-section{
-  background:rgba(255,255,255,0.92);
-  border-radius:25px;
-  box-shadow:0 10px 25px rgba(0,0,0,0.15);
-  overflow:hidden;
-  backdrop-filter:blur(15px);
-  transition:all 0.5s ease;
-  position:relative;
-}
-.payment-section-header{
-  padding:18px 25px;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  cursor:pointer;
-  background:linear-gradient(135deg,#ff6a00,#ee0979,#7f00ff,#00c6ff);
-  background-size:300% 300%;
-  animation:gradientMove 8s ease infinite;
-  color:#fff;
-  border-bottom:1px solid rgba(255,255,255,0.3);
-}
-@keyframes gradientMove {
-  0%{background-position:0% 50%;}
-  50%{background-position:100% 50%;}
-  100%{background-position:0% 50%;}
-}
-.payment-section-header h3{
-  font-size:1.2rem;font-weight:600;
-  display:flex;align-items:center;gap:10px;
-}
-.payment-section-header i{font-size:1.2rem;}
-.payment-section.collapsed .payment-content{
-  max-height:0;opacity:0;padding:0 25px;pointer-events:none;
-}
-.payment-section.expanded .payment-content{
-  max-height:1200px;opacity:1;padding:25px;
-}
-.payment-content{transition:all 0.5s ease;overflow:hidden;}
-
-/* Form */
-.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;}
-@media(max-width:700px){.form-grid{grid-template-columns:1fr;}}
-
-label{font-weight:500;color:#495057;margin-bottom:5px;display:block;}
-.input-with-icon{position:relative;}
-.input-with-icon i{
-  position:absolute;left:15px;top:50%;transform:translateY(-50%);color:#6c757d;
-}
-.input-with-icon input,.input-with-icon select{
-  width:100%;padding:12px 12px 12px 40px;
-  border:2px solid #e9ecef;border-radius:10px;font-size:14px;
-  background:rgba(255,255,255,0.9);
-}
-.input-with-icon input:focus,.input-with-icon select:focus{
-  outline:none;border-color:#667eea;
-  box-shadow:0 0 0 3px rgba(102,126,234,0.2);
-}
-
-.btn{
-  width:100%;padding:14px;background:linear-gradient(135deg,#667eea,#764ba2);
-  color:#fff;border:none;border-radius:10px;font-weight:600;
-  cursor:pointer;transition:0.3s;margin-top:5px;
-}
-.btn:hover{transform:translateY(-2px);box-shadow:0 6px 12px rgba(102,126,234,0.3);}
-.loading{
-  display:inline-block;width:20px;height:20px;border:3px solid rgba(255,255,255,0.3);
-  border-radius:50%;border-top-color:#fff;animation:spin 1s linear infinite;
-}
-@keyframes spin{to{transform:rotate(360deg);}}
-
-/* Payment History */
-.payment-history{
-  background:rgba(255,255,255,0.92);
-  border-radius:25px;
-  box-shadow:0 10px 25px rgba(0,0,0,0.15);
-  overflow:hidden;
-  backdrop-filter:blur(15px);
-  transition:all 0.5s ease;
-  position:relative;
-}
-.payment-history-header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  flex-wrap:wrap;
-  gap:8px;
-  margin-bottom:10px;
-  padding:16px 20px 0;
-}
-.refresh-btn{
-  background:#28a745;color:#fff;border:none;
-  padding:8px 15px;border-radius:6px;cursor:pointer;
-  transition:0.3s;font-size:0.9rem;
-}
-.refresh-btn:hover{background:#218838;}
-.refresh-btn.spin i{animation:spin 0.8s linear infinite;}
-
-/* Table Responsive */
-.table-responsive{
-  width:100%;
-  overflow-x:auto;
-  padding:0 20px 20px;
-}
-table{width:100%;border-collapse:collapse;min-width:600px;}
-th{background:#667eea;color:#fff;padding:10px;text-align:left;font-size:0.9rem;}
-td{padding:10px;border-bottom:1px solid #e9ecef;font-size:0.9rem;}
-tr:hover{background:#f8f9fa;}
-.status-badge{padding:4px 10px;border-radius:10px;font-size:0.8rem;font-weight:600;}
-.paid{background:#d4edda;color:#155724;}
-.pending{background:#fff3cd;color:#856404;}
-.empty-state{text-align:center;color:#6c757d;padding:30px 0;}
-.empty-state i{font-size:2rem;margin-bottom:10px;color:#dee2e6;}
-</style>
-</head>
-<body>
-<div class="dashboard-container">
-  <div class="dashboard-header">
-    <div class="user-info">
-      <h1>Welcome, <span id="userName">User</span>! 👋</h1>
-      <p>Member ID: <strong id="userMemberId">Loading...</strong></p>
-    </div>
-    <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
-  </div>
-
-  <div class="dashboard-grid">
-    <!-- Submit New Payment -->
-    <div class="payment-section collapsed" id="paymentBox">
-      <div class="payment-section-header" onclick="togglePaymentBox()">
-        <h3><i class="fas fa-plus-circle"></i> Submit New Payment</h3>
-        <i class="fas fa-chevron-down" id="arrowIcon"></i>
-      </div>
-      <div class="payment-content">
-        <form id="paymentForm">
-          <div class="form-grid">
-            <div>
-              <label>Select Month & Year *</label>
-              <div class="input-with-icon">
-                <i class="fas fa-calendar-alt"></i>
-                <select id="monthSelect" name="Month" required><option value="">Choose Month</option></select>
-              </div>
-            </div>
-            <div>
-              <label>Payment Date *</label>
-              <div class="input-with-icon">
-                <i class="fas fa-calendar-day"></i>
-                <input type="date" id="paymentDate" name="PaymentDate" required>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-grid">
-            <div>
-              <label>Amount *</label>
-              <div class="input-with-icon">
-                <i class="fas fa-money-bill-wave"></i>
-                <input type="number" name="Amount" required placeholder="Enter Amount">
-              </div>
-            </div>
-            <div>
-              <label>Payment Method *</label>
-              <div class="input-with-icon">
-                <i class="fas fa-wallet"></i>
-                <select name="Method" required>
-                  <option value="">Select Method</option>
-                  <option value="Bkash">Bkash</option>
-                  <option value="Nagad">Nagad</option>
-                  <option value="Bank">Bank</option>
-                </select>
-              </div>
-            </div>
-          </div>
-
-          <div class="form-grid">
-            <div>
-              <label>Phone Number *</label>
-              <div class="input-with-icon">
-                <i class="fas fa-phone"></i>
-                <input type="tel" name="Phone" required placeholder="Enter Phone Number">
-              </div>
-            </div>
-            <div>
-              <label>Transaction ID *</label>
-              <div class="input-with-icon">
-                <i class="fas fa-receipt"></i>
-                <input type="text" name="TrxID" required placeholder="Enter TrxID">
-              </div>
-            </div>
-          </div>
-
-          <input type="hidden" id="currentMemberId" name="MemberID">
-          <input type="hidden" id="currentUserName" name="Name">
-          <input type="hidden" name="Status" value="Pending">
-          <button type="submit" class="btn"><i class="fas fa-paper-plane"></i> Submit Payment</button>
-        </form>
-        <div id="paymentMessage"></div>
-      </div>
-    </div>
-
-    <!-- Payment History -->
-    <div class="payment-history">
-      <div class="payment-history-header">
-        <h3><i class="fas fa-history"></i> Payment History</h3>
-        <button class="refresh-btn" id="refreshBtn" onclick="manualRefresh()"><i class="fas fa-sync-alt"></i> Refresh</button>
-      </div>
-      <div id="paymentStatus" class="info message"><i class="fas fa-sync fa-spin"></i> Loading your payment history...</div>
-      <div class="table-responsive" id="paymentTableContainer"></div>
-    </div>
-  </div>
-</div>
-
-<script>
-const SCRIPT_URL='https://script.google.com/macros/s/AKfycbxZqHw4DYfsEzgfeuxlBTCeJsuhHqFUiq9yTnQmtua09uqXlHtrgt-_HJi2z5QNfW63/exec';
-let currentUser=null;
-
-function togglePaymentBox(){
-  const box=document.getElementById('paymentBox');
-  const icon=document.querySelector('.payment-section-header h3 i');
-  const arrow=document.getElementById('arrowIcon');
-  box.classList.toggle('collapsed');
-  box.classList.toggle('expanded');
-  if(box.classList.contains('expanded')) icon.classList.replace('fa-plus-circle','fa-minus-circle');
-  else icon.classList.replace('fa-minus-circle','fa-plus-circle');
-  arrow.classList.toggle('fa-chevron-down');
-  arrow.classList.toggle('fa-chevron-up');
-}
-
-function generateMonthOptions(){
-  const monthSelect=document.getElementById('monthSelect');
-  const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
-  const now=new Date(),year=now.getFullYear();
-  for(let y=year;y<=year+1;y++){
-    for(let m=0;m<12;m++){
-      const opt=document.createElement('option');
-      opt.value=`${months[m]} ${y}`;
-      opt.textContent=`${months[m]} ${y}`;
-      monthSelect.appendChild(opt);
+    body {
+      background: linear-gradient(-45deg, #667eea, #764ba2, #ff758c, #42e695);
+      background-size: 400% 400%;
+      animation: gradientBG 12s ease infinite;
+      min-height: 100vh;
+      color: #2c3e50;
+      overflow-x: hidden;
+      padding: 20px;
     }
-  }
-}
-function setDefaultPaymentDate(){
-  const t=new Date();
-  document.getElementById('paymentDate').value=t.toISOString().split('T')[0];
-}
-window.addEventListener('load',()=>{
-  const u=localStorage.getItem('currentUser');
-  if(!u){location.href='index.html';return;}
-  currentUser=JSON.parse(u);
-  document.getElementById('userName').textContent=currentUser.fullName;
-  document.getElementById('userMemberId').textContent=currentUser.memberId;
-  document.getElementById('currentMemberId').value=currentUser.memberId;
-  document.getElementById('currentUserName').value=currentUser.fullName;
-  generateMonthOptions();setDefaultPaymentDate();loadUserPayments();
-});
-async function manualRefresh(){
-  const btn=document.getElementById('refreshBtn');
-  btn.classList.add('spin');await loadUserPayments();
-  setTimeout(()=>btn.classList.remove('spin'),600);
-}
-document.getElementById('paymentForm').addEventListener('submit',async e=>{
-  e.preventDefault();
-  const fd=new FormData(e.target);
-  const msg=document.getElementById('paymentMessage');
-  const btn=e.target.querySelector('button');
-  const original=btn.innerHTML;
-  btn.innerHTML='<div class="loading"></div> Submitting...';btn.disabled=true;
-  try{
-    const res=await fetch(SCRIPT_URL,{method:'POST',body:new URLSearchParams({
-      action:'submit_payment',MemberID:currentUser.memberId,Name:currentUser.fullName,
-      Month:fd.get('Month'),Amount:fd.get('Amount'),Phone:fd.get('Phone'),
-      Method:fd.get('Method'),TrxID:fd.get('TrxID'),PaymentDate:fd.get('PaymentDate'),Status:'Pending'
-    })});
-    const r=await res.json();
-    if(r.result==='error'&&r.message==='duplicate_trxid'){
-      msg.innerHTML='<div class="error"><i class="fas fa-exclamation-triangle"></i> Duplicate TrxID! Please use a unique one.</div>';
-    }else if(r.result==='success'){
-      msg.innerHTML='<div class="success"><i class="fas fa-check-circle"></i> Payment submitted successfully! Refreshing...</div>';
-      e.target.reset();setDefaultPaymentDate();await loadUserPayments();
-    }else{msg.innerHTML='<div class="error">Something went wrong.</div>';}
-  }catch(err){msg.innerHTML='<div class="error">Network error. Try again.</div>';}
-  btn.innerHTML=original;btn.disabled=false;
-});
-async function loadUserPayments(){
-  try{
-    const res=await fetch(SCRIPT_URL,{method:'POST',body:new URLSearchParams({action:'get_payments',memberId:currentUser.memberId})});
-    const r=await res.json();if(r.result==='success'){displayPayments(r.payments);}
-  }catch(e){document.getElementById('paymentStatus').innerHTML='<div class="error">Error loading payments.</div>';}
-}
-function displayPayments(p){
-  const container=document.getElementById('paymentTableContainer');
-  if(!p||p.length===0){container.innerHTML='<div class="empty-state"><i class="fas fa-file-invoice"></i><p>No Payments Yet</p></div>';return;}
-  p.sort((a,b)=>new Date(b.date||b.PaymentDate)-new Date(a.date||a.PaymentDate));
-  let h='<div class="table-responsive"><table><thead><tr><th>Month</th><th>Amount</th><th>Status</th><th>TrxID</th><th>Payment Date</th></tr></thead><tbody>';
-  for(const x of p){
-    const s=x.status.toLowerCase();
-    const d=x.date||x.PaymentDate;
-    h+=`<tr><td>${x.month}</td><td>${x.amount} Tk</td><td><span class="status-badge ${s}">${x.status}</span></td><td><code>${x.trxid}</code></td><td>${new Date(d).toLocaleDateString()}</td></tr>`;
-  }
-  h+='</tbody></table></div>';container.innerHTML=h;
-}
-function logout(){localStorage.removeItem('currentUser');location.href='index.html';}
-</script>
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .dashboard-container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .dashboard-header {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 25px;
+      margin-bottom: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      color: white;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    }
+
+    .dashboard-header h1 { font-size: 1.8rem; }
+    .dashboard-header p { font-size: 1rem; opacity: 0.9; }
+
+    .logout-btn {
+      background: #e74c3c;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .logout-btn:hover { background: #c0392b; }
+
+    /* Stats Section */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(12px);
+      border-radius: 20px;
+      padding: 25px;
+      color: white;
+      text-align: center;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+    }
+
+    .stat-icon {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    .stat-number {
+      font-size: 2rem;
+      font-weight: 700;
+      margin-bottom: 5px;
+    }
+
+    .stat-label {
+      font-size: 1rem;
+      opacity: 0.9;
+    }
+
+    .stat-blue { background: rgba(102, 126, 234, 0.25); border-left: 5px solid #667eea; }
+    .stat-green { background: rgba(72, 201, 176, 0.25); border-left: 5px solid #48c9b0; }
+    .stat-yellow { background: rgba(241, 196, 15, 0.25); border-left: 5px solid #f1c40f; }
+    .stat-purple { background: rgba(155, 89, 182, 0.25); border-left: 5px solid #9b59b6; }
+
+    /* Payment Section */
+    .payment-section {
+      background: rgba(255, 255, 255, 0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 25px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      margin-bottom: 30px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .section-header h3 { color: white; font-size: 1.4rem; }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .form-group label {
+      color: white;
+      font-weight: 500;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      font-size: 1rem;
+      outline: none;
+    }
+
+    input::placeholder { color: #eaeaea; }
+
+    .btn {
+      width: 100%;
+      padding: 14px;
+      background: linear-gradient(135deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 15px rgba(0,0,0,0.3); }
+
+    /* Table */
+    .table-responsive {
+      overflow-x: auto;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.15);
+      backdrop-filter: blur(10px);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      color: white;
+    }
+
+    th, td {
+      padding: 12px 15px;
+      text-align: left;
+    }
+
+    th {
+      background: rgba(255,255,255,0.2);
+      position: sticky;
+      top: 0;
+    }
+
+    tr:nth-child(even) { background: rgba(255,255,255,0.05); }
+
+    .status-badge {
+      padding: 5px 10px;
+      border-radius: 20px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+
+    .paid { background: #d4edda; color: #155724; }
+    .pending { background: #fff3cd; color: #856404; }
+
+    @media (max-width: 768px) {
+      .form-grid { grid-template-columns: 1fr; }
+      .dashboard-header { flex-direction: column; gap: 10px; text-align: center; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    @media (max-width: 480px) {
+      .stats-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="dashboard-container">
+    <div class="dashboard-header">
+      <div>
+        <h1>Welcome, <span id="userName">User</span> 👋</h1>
+        <p>Member ID: <strong id="userMemberId">Loading...</strong></p>
+      </div>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+
+    <!-- 📊 Stats Section -->
+    <div class="stats-grid">
+      <div class="stat-card stat-blue">
+        <div class="stat-icon"><i class="fas fa-list"></i></div>
+        <div class="stat-number" id="statTotalPayments">0</div>
+        <div class="stat-label">Total Payments</div>
+      </div>
+
+      <div class="stat-card stat-green">
+        <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+        <div class="stat-number" id="statPaid">0</div>
+        <div class="stat-label">Paid Payments</div>
+      </div>
+
+      <div class="stat-card stat-yellow">
+        <div class="stat-icon"><i class="fas fa-hourglass-half"></i></div>
+        <div class="stat-number" id="statPending">0</div>
+        <div class="stat-label">Pending Payments</div>
+      </div>
+
+      <div class="stat-card stat-purple">
+        <div class="stat-icon"><i class="fas fa-wallet"></i></div>
+        <div class="stat-number" id="statTotalAmount">0 Tk</div>
+        <div class="stat-label">Total Paid Amount</div>
+      </div>
+    </div>
+
+    <!-- 💳 Submit Payment Section -->
+    <div class="payment-section">
+      <div class="section-header">
+        <h3><i class="fas fa-plus-circle"></i> Submit New Payment</h3>
+      </div>
+
+      <form id="paymentForm">
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Month & Year</label>
+            <select id="monthSelect" required></select>
+          </div>
+
+          <div class="form-group">
+            <label>Payment Date</label>
+            <input type="date" id="paymentDate" required>
+          </div>
+
+          <div class="form-group">
+            <label>Amount</label>
+            <input type="number" id="amount" placeholder="Enter Amount" required>
+          </div>
+
+          <div class="form-group">
+            <label>Payment Method</label>
+            <select id="paymentMethod" required>
+              <option value="">Select Method</option>
+              <option>Bkash</option>
+              <option>Nagad</option>
+              <option>Bank</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Phone Number</label>
+            <input type="text" id="phoneNumber" placeholder="Enter Phone Number" required>
+          </div>
+
+          <div class="form-group">
+            <label>Transaction ID</label>
+            <input type="text" id="trxid" placeholder="Enter TrxID" required>
+          </div>
+        </div>
+
+        <button type="submit" class="btn">Submit Payment</button>
+      </form>
+      <div id="paymentMessage" style="margin-top:15px;color:white;"></div>
+    </div>
+
+    <!-- 📜 Payment History -->
+    <div class="payment-section">
+      <div class="section-header">
+        <h3><i class="fas fa-history"></i> Payment History</h3>
+        <button class="btn" style="width:auto;padding:10px 15px;" onclick="loadPayments()">
+          <i class="fas fa-sync-alt"></i> Refresh
+        </button>
+      </div>
+      <div class="table-responsive">
+        <table id="paymentTable">
+          <thead>
+            <tr>
+              <th>Month</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>TrxID</th>
+              <th>Payment Date</th>
+            </tr>
+          </thead>
+          <tbody></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxZqHw4DYfsEzgfeuxlBTCeJsuhHqFUiq9yTnQmtua09uqXlHtrgt-_HJi2z5QNfW63/exec";
+    let currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+
+    window.onload = () => {
+      if (!currentUser.email) location.href = 'index.html';
+      document.getElementById('userName').textContent = currentUser.fullName || 'User';
+      document.getElementById('userMemberId').textContent = currentUser.memberId || 'N/A';
+      generateMonthOptions();
+      loadPayments();
+    };
+
+    function logout() { localStorage.removeItem('currentUser'); location.href = 'index.html'; }
+
+    function generateMonthOptions() {
+      const select = document.getElementById('monthSelect');
+      const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+      const now = new Date();
+      for (let i = 0; i < 12; i++) {
+        const date = new Date(now.getFullYear(), now.getMonth()+i, 1);
+        const opt = document.createElement('option');
+        opt.value = `${months[date.getMonth()]} ${date.getFullYear()}`;
+        opt.textContent = opt.value;
+        select.appendChild(opt);
+      }
+    }
+
+    document.getElementById('paymentForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const data = {
+        action: 'submit_payment',
+        MemberID: currentUser.memberId,
+        Name: currentUser.fullName,
+        Month: document.getElementById('monthSelect').value,
+        PaymentDate: document.getElementById('paymentDate').value,
+        Amount: document.getElementById('amount').value,
+        TrxID: document.getElementById('trxid').value,
+        Status: 'Pending'
+      };
+      const msg = document.getElementById('paymentMessage');
+      msg.textContent = 'Submitting...';
+      const res = await fetch(SCRIPT_URL, { method:'POST', body: new URLSearchParams(data) });
+      const result = await res.json();
+      if (result.result === 'success') {
+        msg.textContent = '✅ Payment submitted successfully!';
+        loadPayments();
+      } else {
+        msg.textContent = '❌ Error: ' + (result.message || 'Unknown');
+      }
+    });
+
+    async function loadPayments() {
+      const res = await fetch(SCRIPT_URL, {
+        method:'POST',
+        body: new URLSearchParams({ action:'get_payments', memberId: currentUser.memberId })
+      });
+      const result = await res.json();
+      if (result.result === 'success') {
+        const rows = result.payments || [];
+        rows.sort((a,b)=>new Date(b.PaymentDate)-new Date(a.PaymentDate));
+        const tbody = document.querySelector('#paymentTable tbody');
+        tbody.innerHTML = rows.map(r => `
+          <tr>
+            <td>${r.month}</td>
+            <td>${r.amount} Tk</td>
+            <td><span class="status-badge ${r.status.toLowerCase()}">${r.status}</span></td>
+            <td>${r.trxid}</td>
+            <td>${new Date(r.date).toLocaleDateString()}</td>
+          </tr>`).join('');
+        updateStats(rows);
+      }
+    }
+
+    function updateStats(rows) {
+      const total = rows.length;
+      const paid = rows.filter(r => r.status === 'Paid').length;
+      const pending = rows.filter(r => r.status === 'Pending').length;
+      const totalPaid = rows.filter(r => r.status === 'Paid')
+                            .reduce((sum,r)=>sum+parseFloat(r.amount||0),0);
+      animateValue('statTotalPayments', 0, total, 800);
+      animateValue('statPaid', 0, paid, 800);
+      animateValue('statPending', 0, pending, 800);
+      document.getElementById('statTotalAmount').textContent = totalPaid + ' Tk';
+    }
+
+    function animateValue(id, start, end, duration) {
+      const el = document.getElementById(id);
+      let startTime = null;
+      function step(time) {
+        if (!startTime) startTime = time;
+        const progress = Math.min((time - startTime) / duration, 1);
+        el.textContent = Math.floor(progress * (end - start) + start);
+        if (progress < 1) requestAnimationFrame(step);
+      }
+      requestAnimationFrame(step);
+    }
+  </script>
 </body>
 </html>
