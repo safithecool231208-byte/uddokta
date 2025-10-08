@@ -1,379 +1,360 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard | Student Payment Portal</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-  <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-    body {
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      min-height: 100vh;
-      padding: 15px;
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dashboard | Student Payment Portal</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
 
-    .dashboard-container {
-      max-width: 1100px;
-      margin: 0 auto;
-    }
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+body{
+  background:linear-gradient(135deg,#667eea,#764ba2);
+  min-height:100vh;
+  padding:15px;
+  display:flex;
+  justify-content:center;
+}
+.dashboard-container{
+  width:100%;
+  max-width:1200px;
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
 
-    .dashboard-header {
-      background: rgba(255,255,255,0.95);
-      backdrop-filter: blur(10px);
-      border-radius: 20px;
-      padding: 25px;
-      margin-bottom: 25px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    }
+/* Header */
+.dashboard-header{
+  background:rgba(255,255,255,0.95);
+  border-radius:20px;
+  padding:15px 20px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  box-shadow:0 8px 20px rgba(0,0,0,0.15);
+  flex-wrap:wrap;
+  gap:10px;
+}
+.dashboard-header h1{font-size:1.3rem;color:#2c3e50;}
+.dashboard-header p{color:#7f8c8d;font-size:0.9rem;}
+.logout-btn{
+  background:#e74c3c;color:#fff;border:none;padding:10px 18px;
+  border-radius:10px;font-weight:500;cursor:pointer;transition:0.3s;
+}
+.logout-btn:hover{background:#c0392b;transform:translateY(-2px);}
 
-    .user-info h1 { color: #2c3e50; font-size: 1.5rem; }
-    .user-info p { color: #7f8c8d; font-size: 0.95rem; }
+/* Layout Grid */
+.dashboard-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:20px;
+}
+@media(max-width:950px){
+  .dashboard-grid{grid-template-columns:1fr;gap:15px;}
+}
 
-    .logout-btn {
-      background: #e74c3c;
-      color: white;
-      border: none;
-      padding: 10px 18px;
-      border-radius: 10px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      font-size: 0.95rem;
-    }
-    .logout-btn:hover { background: #c0392b; }
+/* Submit Box - Visa Card Style */
+.payment-section{
+  background:rgba(255,255,255,0.92);
+  border-radius:25px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.15);
+  overflow:hidden;
+  backdrop-filter:blur(15px);
+  transition:all 0.5s ease;
+  position:relative;
+}
+.payment-section-header{
+  padding:18px 25px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  cursor:pointer;
+  background:linear-gradient(135deg,#ff6a00,#ee0979,#7f00ff,#00c6ff);
+  background-size:300% 300%;
+  animation:gradientMove 8s ease infinite;
+  color:#fff;
+  border-bottom:1px solid rgba(255,255,255,0.3);
+}
+@keyframes gradientMove {
+  0%{background-position:0% 50%;}
+  50%{background-position:100% 50%;}
+  100%{background-position:0% 50%;}
+}
+.payment-section-header h3{
+  font-size:1.2rem;font-weight:600;
+  display:flex;align-items:center;gap:10px;
+}
+.payment-section-header i{font-size:1.2rem;}
+.payment-section.collapsed .payment-content{
+  max-height:0;opacity:0;padding:0 25px;pointer-events:none;
+}
+.payment-section.expanded .payment-content{
+  max-height:1200px;opacity:1;padding:25px;
+}
+.payment-content{transition:all 0.5s ease;overflow:hidden;}
 
-    .dashboard-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 20px;
-    }
+/* Form */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px;}
+@media(max-width:700px){.form-grid{grid-template-columns:1fr;}}
 
-    @media(max-width: 768px) {
-      .dashboard-grid { grid-template-columns: 1fr; }
-      .dashboard-header { flex-direction: column; align-items: flex-start; }
-      .logout-btn { margin-top: 10px; width: 100%; }
-    }
+label{font-weight:500;color:#495057;margin-bottom:5px;display:block;}
+.input-with-icon{position:relative;}
+.input-with-icon i{
+  position:absolute;left:15px;top:50%;transform:translateY(-50%);color:#6c757d;
+}
+.input-with-icon input,.input-with-icon select{
+  width:100%;padding:12px 12px 12px 40px;
+  border:2px solid #e9ecef;border-radius:10px;font-size:14px;
+  background:rgba(255,255,255,0.9);
+}
+.input-with-icon input:focus,.input-with-icon select:focus{
+  outline:none;border-color:#667eea;
+  box-shadow:0 0 0 3px rgba(102,126,234,0.2);
+}
 
-    .payment-section {
-      background: rgba(255,255,255,0.95);
-      border-radius: 20px;
-      padding: 25px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
-    }
+.btn{
+  width:100%;padding:14px;background:linear-gradient(135deg,#667eea,#764ba2);
+  color:#fff;border:none;border-radius:10px;font-weight:600;
+  cursor:pointer;transition:0.3s;margin-top:5px;
+}
+.btn:hover{transform:translateY(-2px);box-shadow:0 6px 12px rgba(102,126,234,0.3);}
+.loading{
+  display:inline-block;width:20px;height:20px;border:3px solid rgba(255,255,255,0.3);
+  border-radius:50%;border-top-color:#fff;animation:spin 1s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg);}}
 
-    .section-header h3 {
-      color: #2c3e50;
-      font-size: 1.2rem;
-      margin-bottom: 15px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
+/* Payment History */
+.payment-history{
+  background:rgba(255,255,255,0.92);
+  border-radius:25px;
+  box-shadow:0 10px 25px rgba(0,0,0,0.15);
+  overflow:hidden;
+  backdrop-filter:blur(15px);
+  transition:all 0.5s ease;
+  position:relative;
+}
+.payment-history-header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-bottom:10px;
+  padding:16px 20px 0;
+}
+.refresh-btn{
+  background:#28a745;color:#fff;border:none;
+  padding:8px 15px;border-radius:6px;cursor:pointer;
+  transition:0.3s;font-size:0.9rem;
+}
+.refresh-btn:hover{background:#218838;}
+.refresh-btn.spin i{animation:spin 0.8s linear infinite;}
 
-    .form-group { margin-bottom: 15px; }
-    label { display: block; margin-bottom: 8px; font-weight: 500; color: #444; font-size: 0.9rem; }
-    .input-with-icon { position: relative; }
-    .input-with-icon i {
-      position: absolute;
-      left: 12px;
-      top: 50%;
-      transform: translateY(-50%);
-      color: #777;
-    }
-    .input-with-icon input, .input-with-icon select {
-      width: 100%;
-      padding: 12px 12px 12px 40px;
-      border: 2px solid #e9ecef;
-      border-radius: 10px;
-      font-size: 0.95rem;
-    }
-    .input-with-icon input:focus, .input-with-icon select:focus {
-      outline: none; border-color: #667eea; box-shadow: 0 0 0 3px rgba(102,126,234,0.1);
-    }
-
-    .btn {
-      width: 100%;
-      padding: 12px;
-      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-      color: white;
-      border: none;
-      border-radius: 10px;
-      font-weight: 600;
-      cursor: pointer;
-      font-size: 1rem;
-    }
-    .btn:hover { opacity: 0.9; }
-
-    .refresh-btn {
-      background: #28a745;
-      color: white;
-      border: none;
-      padding: 8px 15px;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      font-size: 0.9rem;
-    }
-    .refresh-btn:hover { background: #218838; }
-    .refresh-btn i.spin { animation: spin 1s linear infinite; }
-
-    .table-responsive { overflow-x: auto; border-radius: 10px; margin-top: 15px; }
-    table { width: 100%; border-collapse: collapse; background: white; }
-    th, td { padding: 10px; border-bottom: 1px solid #ddd; text-align: left; font-size: 0.9rem; }
-    th { background: #667eea; color: white; position: sticky; top: 0; }
-    tr:hover { background: #f5f5f5; }
-
-    .status-badge {
-      padding: 5px 10px;
-      border-radius: 20px;
-      font-size: 0.8rem;
-      font-weight: 600;
-    }
-    .paid { background: #d4edda; color: #155724; }
-    .pending { background: #fff3cd; color: #856404; }
-    .error, .success, .info {
-      padding: 10px;
-      border-radius: 10px;
-      margin-top: 10px;
-      font-size: 0.9rem;
-      text-align: center;
-    }
-    .error { background: #f8d7da; color: #721c24; }
-    .success { background: #d4edda; color: #155724; }
-    .info { background: #cce7ff; color: #004085; }
-
-    .loading {
-      display: inline-block;
-      width: 18px; height: 18px;
-      border: 2px solid rgba(255,255,255,0.3);
-      border-radius: 50%;
-      border-top-color: #fff;
-      animation: spin 1s linear infinite;
-      vertical-align: middle;
-      margin-right: 8px;
-    }
-
-    @keyframes spin { to { transform: rotate(360deg); } }
-  </style>
+/* Table Responsive */
+.table-responsive{
+  width:100%;
+  overflow-x:auto;
+  padding:0 20px 20px;
+}
+table{width:100%;border-collapse:collapse;min-width:600px;}
+th{background:#667eea;color:#fff;padding:10px;text-align:left;font-size:0.9rem;}
+td{padding:10px;border-bottom:1px solid #e9ecef;font-size:0.9rem;}
+tr:hover{background:#f8f9fa;}
+.status-badge{padding:4px 10px;border-radius:10px;font-size:0.8rem;font-weight:600;}
+.paid{background:#d4edda;color:#155724;}
+.pending{background:#fff3cd;color:#856404;}
+.empty-state{text-align:center;color:#6c757d;padding:30px 0;}
+.empty-state i{font-size:2rem;margin-bottom:10px;color:#dee2e6;}
+</style>
 </head>
 <body>
-  <div class="dashboard-container">
-    <div class="dashboard-header">
-      <div class="user-info">
-        <h1>Welcome, <span id="userName">User</span>! 👋</h1>
-        <p>Member ID: <strong id="userMemberId">Loading...</strong></p>
-      </div>
-      <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+<div class="dashboard-container">
+  <div class="dashboard-header">
+    <div class="user-info">
+      <h1>Welcome, <span id="userName">User</span>! 👋</h1>
+      <p>Member ID: <strong id="userMemberId">Loading...</strong></p>
     </div>
+    <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+  </div>
 
-    <div class="dashboard-grid">
-      <div class="payment-section">
-        <div class="section-header">
-          <h3><i class="fas fa-plus-circle"></i> Submit New Payment</h3>
-        </div>
+  <div class="dashboard-grid">
+    <!-- Submit New Payment -->
+    <div class="payment-section collapsed" id="paymentBox">
+      <div class="payment-section-header" onclick="togglePaymentBox()">
+        <h3><i class="fas fa-plus-circle"></i> Submit New Payment</h3>
+        <i class="fas fa-chevron-down" id="arrowIcon"></i>
+      </div>
+      <div class="payment-content">
         <form id="paymentForm">
-          <div class="form-group">
-            <label>Select Month & Year *</label>
-            <div class="input-with-icon">
-              <i class="fas fa-calendar-alt"></i>
-              <select id="monthSelect" name="Month" required>
-                <option value="">Choose Month</option>
-              </select>
+          <div class="form-grid">
+            <div>
+              <label>Select Month & Year *</label>
+              <div class="input-with-icon">
+                <i class="fas fa-calendar-alt"></i>
+                <select id="monthSelect" name="Month" required><option value="">Choose Month</option></select>
+              </div>
+            </div>
+            <div>
+              <label>Payment Date *</label>
+              <div class="input-with-icon">
+                <i class="fas fa-calendar-day"></i>
+                <input type="date" id="paymentDate" name="PaymentDate" required>
+              </div>
             </div>
           </div>
 
-          <div class="form-group">
-            <label>Payment Date *</label>
-            <div class="input-with-icon">
-              <i class="fas fa-calendar-day"></i>
-              <input type="date" name="PaymentDate" id="paymentDate" required>
+          <div class="form-grid">
+            <div>
+              <label>Amount *</label>
+              <div class="input-with-icon">
+                <i class="fas fa-money-bill-wave"></i>
+                <input type="number" name="Amount" required placeholder="Enter Amount">
+              </div>
+            </div>
+            <div>
+              <label>Payment Method *</label>
+              <div class="input-with-icon">
+                <i class="fas fa-wallet"></i>
+                <select name="Method" required>
+                  <option value="">Select Method</option>
+                  <option value="Bkash">Bkash</option>
+                  <option value="Nagad">Nagad</option>
+                  <option value="Bank">Bank</option>
+                </select>
+              </div>
             </div>
           </div>
 
-          <div class="form-group">
-            <label>Amount *</label>
-            <div class="input-with-icon">
-              <i class="fas fa-money-bill-wave"></i>
-              <input type="number" name="Amount" placeholder="Enter Amount" required>
+          <div class="form-grid">
+            <div>
+              <label>Phone Number *</label>
+              <div class="input-with-icon">
+                <i class="fas fa-phone"></i>
+                <input type="tel" name="Phone" required placeholder="Enter Phone Number">
+              </div>
             </div>
-          </div>
-
-          <div class="form-group">
-            <label>Payment Method *</label>
-            <div class="input-with-icon">
-              <i class="fas fa-hand-holding-usd"></i>
-              <select name="Method" required>
-                <option value="">Select Method</option>
-                <option value="Bkash">Bkash</option>
-                <option value="Nagad">Nagad</option>
-                <option value="Bank">Bank</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label>Phone Number *</label>
-            <div class="input-with-icon">
-              <i class="fas fa-phone"></i>
-              <input type="tel" name="Phone" placeholder="Enter Phone Number" required>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label>Transaction ID *</label>
-            <div class="input-with-icon">
-              <i class="fas fa-receipt"></i>
-              <input type="text" name="TrxID" placeholder="Enter TrxID" required>
+            <div>
+              <label>Transaction ID *</label>
+              <div class="input-with-icon">
+                <i class="fas fa-receipt"></i>
+                <input type="text" name="TrxID" required placeholder="Enter TrxID">
+              </div>
             </div>
           </div>
 
           <input type="hidden" id="currentMemberId" name="MemberID">
           <input type="hidden" id="currentUserName" name="Name">
-
+          <input type="hidden" name="Status" value="Pending">
           <button type="submit" class="btn"><i class="fas fa-paper-plane"></i> Submit Payment</button>
         </form>
         <div id="paymentMessage"></div>
       </div>
+    </div>
 
-      <div class="payment-section">
-        <div class="section-header" style="justify-content: space-between;">
-          <h3><i class="fas fa-history"></i> Payment History</h3>
-          <button class="refresh-btn" id="refreshBtn" onclick="refreshPayments()"><i class="fas fa-sync"></i> Refresh</button>
-        </div>
-        <div id="paymentStatus" class="info"><i class="fas fa-sync fa-spin"></i> Loading payments...</div>
+    <!-- Payment History -->
+    <div class="payment-history">
+      <div class="payment-history-header">
+        <h3><i class="fas fa-history"></i> Payment History</h3>
+        <button class="refresh-btn" id="refreshBtn" onclick="manualRefresh()"><i class="fas fa-sync-alt"></i> Refresh</button>
       </div>
+      <div id="paymentStatus" class="info message"><i class="fas fa-sync fa-spin"></i> Loading your payment history...</div>
+      <div class="table-responsive" id="paymentTableContainer"></div>
     </div>
   </div>
+</div>
 
-  <script>
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxZqHw4DYfsEzgfeuxlBTCeJsuhHqFUiq9yTnQmtua09uqXlHtrgt-_HJi2z5QNfW63/exec';
-    let currentUser = null;
+<script>
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbxZqHw4DYfsEzgfeuxlBTCeJsuhHqFUiq9yTnQmtua09uqXlHtrgt-_HJi2z5QNfW63/exec';
+let currentUser=null;
 
-    function generateMonthOptions() {
-      const monthSelect = document.getElementById('monthSelect');
-      const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-      const now = new Date();
-      const year = now.getFullYear();
-      for (let y = year; y <= year + 1; y++) {
-        for (let m = 0; m < 12; m++) {
-          const opt = document.createElement('option');
-          opt.value = `${months[m]} ${y}`;
-          opt.textContent = `${months[m]} ${y}`;
-          monthSelect.appendChild(opt);
-        }
-      }
+function togglePaymentBox(){
+  const box=document.getElementById('paymentBox');
+  const icon=document.querySelector('.payment-section-header h3 i');
+  const arrow=document.getElementById('arrowIcon');
+  box.classList.toggle('collapsed');
+  box.classList.toggle('expanded');
+  if(box.classList.contains('expanded')) icon.classList.replace('fa-plus-circle','fa-minus-circle');
+  else icon.classList.replace('fa-minus-circle','fa-plus-circle');
+  arrow.classList.toggle('fa-chevron-down');
+  arrow.classList.toggle('fa-chevron-up');
+}
+
+function generateMonthOptions(){
+  const monthSelect=document.getElementById('monthSelect');
+  const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  const now=new Date(),year=now.getFullYear();
+  for(let y=year;y<=year+1;y++){
+    for(let m=0;m<12;m++){
+      const opt=document.createElement('option');
+      opt.value=`${months[m]} ${y}`;
+      opt.textContent=`${months[m]} ${y}`;
+      monthSelect.appendChild(opt);
     }
-
-    function setDefaultPaymentDate() {
-      const today = new Date().toISOString().split('T')[0];
-      document.getElementById('paymentDate').value = today;
-    }
-
-    window.onload = () => {
-      const userData = localStorage.getItem('currentUser');
-      if (!userData) return (window.location.href = 'index.html');
-      currentUser = JSON.parse(userData);
-      document.getElementById('userName').textContent = currentUser.fullName;
-      document.getElementById('userMemberId').textContent = currentUser.memberId;
-      document.getElementById('currentMemberId').value = currentUser.memberId;
-      document.getElementById('currentUserName').value = currentUser.fullName;
-      generateMonthOptions();
-      setDefaultPaymentDate();
-      loadUserPayments();
-    };
-
-    document.getElementById('paymentForm').addEventListener('submit', async (e) => {
-      e.preventDefault();
-      const form = e.target;
-      const btn = form.querySelector('button');
-      const msg = document.getElementById('paymentMessage');
-      btn.disabled = true;
-      btn.innerHTML = '<div class="loading"></div> Submitting...';
-      msg.innerHTML = '';
-
-      try {
-        const res = await fetch(SCRIPT_URL, {
-          method: 'POST',
-          body: new URLSearchParams({
-            action: 'submit_payment',
-            MemberID: currentUser.memberId,
-            Name: currentUser.fullName,
-            Month: form.Month.value,
-            PaymentDate: form.PaymentDate.value,
-            Amount: form.Amount.value,
-            Method: form.Method.value,
-            Phone: form.Phone.value,
-            TrxID: form.TrxID.value,
-            Status: 'Pending'
-          })
-        });
-        const data = await res.json();
-
-        if (data.result === 'error' && data.message === 'duplicate_trxid') {
-          msg.innerHTML = '<div class="error"><i class="fas fa-exclamation-triangle"></i> Duplicate TrxID! Please use a new one.</div>';
-        } else if (data.result === 'success') {
-          msg.innerHTML = '<div class="success"><i class="fas fa-check-circle"></i> Payment submitted successfully! Refreshing history...</div>';
-          form.reset(); setDefaultPaymentDate();
-          document.getElementById('paymentStatus').innerHTML = '<div class="info"><i class="fas fa-sync fa-spin"></i> Refreshing payment history...</div>';
-          await loadUserPayments();
-        } else {
-          msg.innerHTML = `<div class="error"><i class="fas fa-exclamation-triangle"></i> ${data.message || 'Error submitting payment.'}</div>`;
-        }
-      } catch (err) {
-        msg.innerHTML = '<div class="error">Network error. Try again.</div>';
-      }
-      btn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Payment';
-      btn.disabled = false;
-    });
-
-    async function refreshPayments() {
-      const btn = document.getElementById('refreshBtn');
-      const icon = btn.querySelector('i');
-      icon.classList.add('spin');
-      btn.disabled = true;
-      await loadUserPayments();
-      setTimeout(() => { icon.classList.remove('spin'); btn.disabled = false; }, 1000);
-    }
-
-    async function loadUserPayments() {
-      const container = document.getElementById('paymentStatus');
-      try {
-        const res = await fetch(SCRIPT_URL, {
-          method: 'POST',
-          body: new URLSearchParams({ action: 'get_payments', memberId: currentUser.memberId })
-        });
-        const data = await res.json();
-        if (data.result === 'success') displayPayments(data.payments);
-        else container.innerHTML = '<div class="error">Failed to load data.</div>';
-      } catch {
-        container.innerHTML = '<div class="error">Network error while loading payments.</div>';
-      }
-    }
-
-    function displayPayments(payments) {
-      const container = document.getElementById('paymentStatus');
-      if (!payments.length) {
-        container.innerHTML = `<div class="info">No payments found.</div>`;
-        return;
-      }
-      payments.sort((a,b)=> new Date(b.PaymentDate)-new Date(a.PaymentDate));
-      let html = '<div class="table-responsive"><table><thead><tr><th>Month</th><th>Amount</th><th>Status</th><th>TrxID</th><th>Payment Date</th></tr></thead><tbody>';
-      payments.forEach(p=>{
-        html += `<tr><td>${p.month}</td><td>${p.amount} Tk</td><td><span class="status-badge ${p.status.toLowerCase()}">${p.status}</span></td><td>${p.trxid}</td><td>${new Date(p.PaymentDate).toLocaleDateString()}</td></tr>`;
-      });
-      html += '</tbody></table></div>';
-      container.innerHTML = html;
-    }
-
-    function logout() {
-      localStorage.removeItem('currentUser');
-      window.location.href = 'index.html';
-    }
-  </script>
+  }
+}
+function setDefaultPaymentDate(){
+  const t=new Date();
+  document.getElementById('paymentDate').value=t.toISOString().split('T')[0];
+}
+window.addEventListener('load',()=>{
+  const u=localStorage.getItem('currentUser');
+  if(!u){location.href='index.html';return;}
+  currentUser=JSON.parse(u);
+  document.getElementById('userName').textContent=currentUser.fullName;
+  document.getElementById('userMemberId').textContent=currentUser.memberId;
+  document.getElementById('currentMemberId').value=currentUser.memberId;
+  document.getElementById('currentUserName').value=currentUser.fullName;
+  generateMonthOptions();setDefaultPaymentDate();loadUserPayments();
+});
+async function manualRefresh(){
+  const btn=document.getElementById('refreshBtn');
+  btn.classList.add('spin');await loadUserPayments();
+  setTimeout(()=>btn.classList.remove('spin'),600);
+}
+document.getElementById('paymentForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const fd=new FormData(e.target);
+  const msg=document.getElementById('paymentMessage');
+  const btn=e.target.querySelector('button');
+  const original=btn.innerHTML;
+  btn.innerHTML='<div class="loading"></div> Submitting...';btn.disabled=true;
+  try{
+    const res=await fetch(SCRIPT_URL,{method:'POST',body:new URLSearchParams({
+      action:'submit_payment',MemberID:currentUser.memberId,Name:currentUser.fullName,
+      Month:fd.get('Month'),Amount:fd.get('Amount'),Phone:fd.get('Phone'),
+      Method:fd.get('Method'),TrxID:fd.get('TrxID'),PaymentDate:fd.get('PaymentDate'),Status:'Pending'
+    })});
+    const r=await res.json();
+    if(r.result==='error'&&r.message==='duplicate_trxid'){
+      msg.innerHTML='<div class="error"><i class="fas fa-exclamation-triangle"></i> Duplicate TrxID! Please use a unique one.</div>';
+    }else if(r.result==='success'){
+      msg.innerHTML='<div class="success"><i class="fas fa-check-circle"></i> Payment submitted successfully! Refreshing...</div>';
+      e.target.reset();setDefaultPaymentDate();await loadUserPayments();
+    }else{msg.innerHTML='<div class="error">Something went wrong.</div>';}
+  }catch(err){msg.innerHTML='<div class="error">Network error. Try again.</div>';}
+  btn.innerHTML=original;btn.disabled=false;
+});
+async function loadUserPayments(){
+  try{
+    const res=await fetch(SCRIPT_URL,{method:'POST',body:new URLSearchParams({action:'get_payments',memberId:currentUser.memberId})});
+    const r=await res.json();if(r.result==='success'){displayPayments(r.payments);}
+  }catch(e){document.getElementById('paymentStatus').innerHTML='<div class="error">Error loading payments.</div>';}
+}
+function displayPayments(p){
+  const container=document.getElementById('paymentTableContainer');
+  if(!p||p.length===0){container.innerHTML='<div class="empty-state"><i class="fas fa-file-invoice"></i><p>No Payments Yet</p></div>';return;}
+  p.sort((a,b)=>new Date(b.date||b.PaymentDate)-new Date(a.date||a.PaymentDate));
+  let h='<div class="table-responsive"><table><thead><tr><th>Month</th><th>Amount</th><th>Status</th><th>TrxID</th><th>Payment Date</th></tr></thead><tbody>';
+  for(const x of p){
+    const s=x.status.toLowerCase();
+    const d=x.date||x.PaymentDate;
+    h+=`<tr><td>${x.month}</td><td>${x.amount} Tk</td><td><span class="status-badge ${s}">${x.status}</span></td><td><code>${x.trxid}</code></td><td>${new Date(d).toLocaleDateString()}</td></tr>`;
+  }
+  h+='</tbody></table></div>';container.innerHTML=h;
+}
+function logout(){localStorage.removeItem('currentUser');location.href='index.html';}
+</script>
 </body>
 </html>
