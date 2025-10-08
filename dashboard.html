@@ -3,27 +3,23 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Uddokta Students Interface</title>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
+  <title>Dashboard | Student Payment Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-
-    body {
-      background: linear-gradient(-45deg, #667eea, #764ba2, #ff758c, #42e695);
-      background-size: 400% 400%;
-      animation: gradientBG 12s ease infinite;
-      min-height: 100vh;
-      color: #2c3e50;
-      overflow-x: hidden;
-      padding: 20px;
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Poppins", sans-serif;
     }
 
-    @keyframes gradientBG {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
+    body {
+      background: linear-gradient(135deg, #e3f2fd, #90caf9);
+      min-height: 100vh;
+      padding: 20px;
+      color: #2c3e50;
+      transition: all 0.3s ease;
     }
 
     .dashboard-container {
@@ -33,32 +29,47 @@
 
     /* Header */
     .dashboard-header {
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(12px);
+      background: white;
       border-radius: 20px;
       padding: 25px;
-      margin-bottom: 30px;
+      margin-bottom: 25px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      color: white;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+      flex-wrap: wrap;
+      transition: all 0.3s ease;
     }
 
-    .dashboard-header h1 { font-size: 1.8rem; }
-    .dashboard-header p { font-size: 1rem; opacity: 0.9; }
+    .dashboard-header:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+    }
+
+    .user-info h1 {
+      font-size: 1.6rem;
+      color: #0d47a1;
+    }
+
+    .user-info p {
+      color: #546e7a;
+    }
 
     .logout-btn {
-      background: #e74c3c;
+      background: #ef5350;
       color: white;
       border: none;
-      padding: 10px 20px;
+      padding: 10px 25px;
       border-radius: 10px;
+      font-weight: 600;
       cursor: pointer;
       transition: all 0.3s;
     }
 
-    .logout-btn:hover { background: #c0392b; }
+    .logout-btn:hover {
+      background: #c62828;
+      transform: scale(1.05);
+    }
 
     /* Stats Section */
     .stats-grid {
@@ -69,356 +80,253 @@
     }
 
     .stat-card {
-      background: rgba(255, 255, 255, 0.2);
-      backdrop-filter: blur(12px);
+      background: white;
       border-radius: 20px;
-      padding: 25px;
-      color: white;
+      padding: 20px;
       text-align: center;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
     }
 
     .stat-card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 15px 30px rgba(0,0,0,0.25);
+      box-shadow: 0 12px 25px rgba(0, 0, 0, 0.15);
     }
 
-    .stat-icon {
-      font-size: 2rem;
+    .stat-card h3 {
+      font-size: 1rem;
       margin-bottom: 10px;
     }
 
-    .stat-number {
+    .stat-card .number {
       font-size: 2rem;
       font-weight: 700;
-      margin-bottom: 5px;
     }
 
-    .stat-label {
-      font-size: 1rem;
-      opacity: 0.9;
-    }
+    .blue-card { border-left: 6px solid #42a5f5; }
+    .green-card { border-left: 6px solid #66bb6a; }
+    .orange-card { border-left: 6px solid #ffa726; }
+    .purple-card { border-left: 6px solid #ab47bc; }
 
-    .stat-blue { background: rgba(102, 126, 234, 0.25); border-left: 5px solid #667eea; }
-    .stat-green { background: rgba(72, 201, 176, 0.25); border-left: 5px solid #48c9b0; }
-    .stat-yellow { background: rgba(241, 196, 15, 0.25); border-left: 5px solid #f1c40f; }
-    .stat-purple { background: rgba(155, 89, 182, 0.25); border-left: 5px solid #9b59b6; }
-
-    /* Payment Section */
-    .payment-section {
-      background: rgba(255, 255, 255, 0.15);
-      backdrop-filter: blur(10px);
+    /* Sections */
+    .section {
+      background: white;
       border-radius: 20px;
       padding: 25px;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
       margin-bottom: 30px;
+      transition: all 0.3s ease;
+    }
+
+    .section:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
     }
 
     .section-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
     }
 
-    .section-header h3 { color: white; font-size: 1.4rem; }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 15px;
+    .section-header h3 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.2rem;
+      color: #0d47a1;
     }
 
-    .form-group label {
-      color: white;
-      font-weight: 500;
-      margin-bottom: 8px;
-      display: block;
-    }
-
-    input, select {
-      width: 100%;
-      padding: 12px;
-      border: none;
-      border-radius: 10px;
-      background: rgba(255, 255, 255, 0.2);
-      color: white;
-      font-size: 1rem;
-      outline: none;
-    }
-
-    input::placeholder { color: #eaeaea; }
-
-    .btn {
-      width: 100%;
-      padding: 14px;
-      background: linear-gradient(135deg, #667eea, #764ba2);
+    .refresh-btn {
+      background: #43a047;
       color: white;
       border: none;
-      border-radius: 12px;
-      font-weight: 600;
+      padding: 8px 15px;
+      border-radius: 8px;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.3s;
     }
 
-    .btn:hover { transform: translateY(-2px); box-shadow: 0 8px 15px rgba(0,0,0,0.3); }
+    .refresh-btn:hover {
+      background: #2e7d32;
+      transform: scale(1.05);
+    }
 
-    /* Table */
+    /* Payment Table */
     .table-responsive {
       overflow-x: auto;
-      border-radius: 10px;
-      background: rgba(255,255,255,0.15);
-      backdrop-filter: blur(10px);
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      color: white;
+      margin-top: 10px;
     }
 
     th, td {
       padding: 12px 15px;
+      border-bottom: 1px solid #e0e0e0;
       text-align: left;
+      font-size: 0.9rem;
     }
 
     th {
-      background: rgba(255,255,255,0.2);
+      background: #90caf9;
+      color: #0d47a1;
       position: sticky;
       top: 0;
     }
 
-    tr:nth-child(even) { background: rgba(255,255,255,0.05); }
+    tr:hover {
+      background: #f1f8e9;
+    }
 
     .status-badge {
       padding: 5px 10px;
       border-radius: 20px;
       font-weight: 600;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
     }
 
-    .paid { background: #d4edda; color: #155724; }
-    .pending { background: #fff3cd; color: #856404; }
+    .paid { background: #c8e6c9; color: #2e7d32; }
+    .pending { background: #ffe0b2; color: #ef6c00; }
 
     @media (max-width: 768px) {
-      .form-grid { grid-template-columns: 1fr; }
-      .dashboard-header { flex-direction: column; gap: 10px; text-align: center; }
-      .stats-grid { grid-template-columns: repeat(2, 1fr); }
-    }
-
-    @media (max-width: 480px) {
-      .stats-grid { grid-template-columns: 1fr; }
+      .dashboard-header {
+        flex-direction: column;
+        text-align: center;
+        gap: 10px;
+      }
+      .section-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: flex-start;
+      }
     }
   </style>
 </head>
-
 <body>
   <div class="dashboard-container">
     <div class="dashboard-header">
-      <div>
+      <div class="user-info">
         <h1>Welcome, <span id="userName">User</span> 👋</h1>
         <p>Member ID: <strong id="userMemberId">Loading...</strong></p>
       </div>
-      <button class="logout-btn" onclick="logout()">Logout</button>
+      <button class="logout-btn" onclick="logout()">
+        <i class="fas fa-sign-out-alt"></i> Logout
+      </button>
     </div>
 
-    <!-- 📊 Stats Section -->
+    <!-- Stats Section -->
     <div class="stats-grid">
-      <div class="stat-card stat-blue">
-        <div class="stat-icon"><i class="fas fa-list"></i></div>
-        <div class="stat-number" id="statTotalPayments">0</div>
-        <div class="stat-label">Total Payments</div>
+      <div class="stat-card blue-card">
+        <h3>Total Payments</h3>
+        <div class="number" id="totalPayments">0</div>
       </div>
-
-      <div class="stat-card stat-green">
-        <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
-        <div class="stat-number" id="statPaid">0</div>
-        <div class="stat-label">Paid Payments</div>
+      <div class="stat-card green-card">
+        <h3>Paid Payments</h3>
+        <div class="number" id="paidPayments">0</div>
       </div>
-
-      <div class="stat-card stat-yellow">
-        <div class="stat-icon"><i class="fas fa-hourglass-half"></i></div>
-        <div class="stat-number" id="statPending">0</div>
-        <div class="stat-label">Pending Payments</div>
+      <div class="stat-card orange-card">
+        <h3>Pending Payments</h3>
+        <div class="number" id="pendingPayments">0</div>
       </div>
-
-      <div class="stat-card stat-purple">
-        <div class="stat-icon"><i class="fas fa-wallet"></i></div>
-        <div class="stat-number" id="statTotalAmount">0 Tk</div>
-        <div class="stat-label">Total Paid Amount</div>
+      <div class="stat-card purple-card">
+        <h3>Total Paid Amount (Tk)</h3>
+        <div class="number" id="totalAmount">0</div>
       </div>
     </div>
 
-    <!-- 💳 Submit Payment Section -->
-    <div class="payment-section">
-      <div class="section-header">
-        <h3><i class="fas fa-plus-circle"></i> Submit New Payment</h3>
-      </div>
-
-      <form id="paymentForm">
-        <div class="form-grid">
-          <div class="form-group">
-            <label>Month & Year</label>
-            <select id="monthSelect" required></select>
-          </div>
-
-          <div class="form-group">
-            <label>Payment Date</label>
-            <input type="date" id="paymentDate" required>
-          </div>
-
-          <div class="form-group">
-            <label>Amount</label>
-            <input type="number" id="amount" placeholder="Enter Amount" required>
-          </div>
-
-          <div class="form-group">
-            <label>Payment Method</label>
-            <select id="paymentMethod" required>
-              <option value="">Select Method</option>
-              <option>Bkash</option>
-              <option>Nagad</option>
-              <option>Bank</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label>Phone Number</label>
-            <input type="text" id="phoneNumber" placeholder="Enter Phone Number" required>
-          </div>
-
-          <div class="form-group">
-            <label>Transaction ID</label>
-            <input type="text" id="trxid" placeholder="Enter TrxID" required>
-          </div>
-        </div>
-
-        <button type="submit" class="btn">Submit Payment</button>
-      </form>
-      <div id="paymentMessage" style="margin-top:15px;color:white;"></div>
-    </div>
-
-    <!-- 📜 Payment History -->
-    <div class="payment-section">
+    <!-- Payment History Section -->
+    <div class="section">
       <div class="section-header">
         <h3><i class="fas fa-history"></i> Payment History</h3>
-        <button class="btn" style="width:auto;padding:10px 15px;" onclick="loadPayments()">
-          <i class="fas fa-sync-alt"></i> Refresh
-        </button>
+        <button class="refresh-btn" onclick="loadUserPayments()"><i class="fas fa-sync-alt"></i> Refresh</button>
       </div>
-      <div class="table-responsive">
-        <table id="paymentTable">
-          <thead>
-            <tr>
-              <th>Month</th>
-              <th>Amount</th>
-              <th>Status</th>
-              <th>TrxID</th>
-              <th>Payment Date</th>
-            </tr>
-          </thead>
-          <tbody></tbody>
-        </table>
+      <div id="paymentStatus">
+        <p><i class="fas fa-spinner fa-spin"></i> Loading your payment history...</p>
       </div>
     </div>
   </div>
 
   <script>
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxZqHw4DYfsEzgfeuxlBTCeJsuhHqFUiq9yTnQmtua09uqXlHtrgt-_HJi2z5QNfW63/exec";
-    let currentUser = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    let currentUser = null;
 
-    window.onload = () => {
-      if (!currentUser.email) location.href = 'index.html';
-      document.getElementById('userName').textContent = currentUser.fullName || 'User';
-      document.getElementById('userMemberId').textContent = currentUser.memberId || 'N/A';
-      generateMonthOptions();
-      loadPayments();
-    };
-
-    function logout() { localStorage.removeItem('currentUser'); location.href = 'index.html'; }
-
-    function generateMonthOptions() {
-      const select = document.getElementById('monthSelect');
-      const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
-      const now = new Date();
-      for (let i = 0; i < 12; i++) {
-        const date = new Date(now.getFullYear(), now.getMonth()+i, 1);
-        const opt = document.createElement('option');
-        opt.value = `${months[date.getMonth()]} ${date.getFullYear()}`;
-        opt.textContent = opt.value;
-        select.appendChild(opt);
+    window.addEventListener("load", () => {
+      const userData = localStorage.getItem("currentUser");
+      if (!userData) {
+        window.location.href = "index.html";
+        return;
       }
-    }
-
-    document.getElementById('paymentForm').addEventListener('submit', async e => {
-      e.preventDefault();
-      const data = {
-        action: 'submit_payment',
-        MemberID: currentUser.memberId,
-        Name: currentUser.fullName,
-        Month: document.getElementById('monthSelect').value,
-        PaymentDate: document.getElementById('paymentDate').value,
-        Amount: document.getElementById('amount').value,
-        TrxID: document.getElementById('trxid').value,
-        Status: 'Pending'
-      };
-      const msg = document.getElementById('paymentMessage');
-      msg.textContent = 'Submitting...';
-      const res = await fetch(SCRIPT_URL, { method:'POST', body: new URLSearchParams(data) });
-      const result = await res.json();
-      if (result.result === 'success') {
-        msg.textContent = '✅ Payment submitted successfully!';
-        loadPayments();
-      } else {
-        msg.textContent = '❌ Error: ' + (result.message || 'Unknown');
-      }
+      currentUser = JSON.parse(userData);
+      document.getElementById("userName").textContent = currentUser.fullName;
+      document.getElementById("userMemberId").textContent = currentUser.memberId;
+      loadUserPayments();
     });
 
-    async function loadPayments() {
-      const res = await fetch(SCRIPT_URL, {
-        method:'POST',
-        body: new URLSearchParams({ action:'get_payments', memberId: currentUser.memberId })
+    async function loadUserPayments() {
+      const container = document.getElementById("paymentStatus");
+      container.innerHTML = `<p><i class="fas fa-spinner fa-spin"></i> Refreshing payment data...</p>`;
+      try {
+        const response = await fetch(SCRIPT_URL, {
+          method: "POST",
+          body: new URLSearchParams({
+            action: "get_payments",
+            memberId: currentUser.memberId,
+          }),
+        });
+        const result = await response.json();
+        if (result.result === "success") {
+          displayPayments(result.payments);
+          updateStats(result.payments);
+        } else {
+          container.innerHTML = "<p>Error loading data.</p>";
+        }
+      } catch (err) {
+        container.innerHTML = "<p>Network error. Try again.</p>";
+      }
+    }
+
+    function displayPayments(payments) {
+      const container = document.getElementById("paymentStatus");
+      if (!payments.length) {
+        container.innerHTML = `<p>No payments found.</p>`;
+        return;
+      }
+      let html = `<div class="table-responsive"><table><thead><tr>
+        <th>Month</th><th>Amount</th><th>Status</th><th>TrxID</th><th>Payment Date</th>
+      </tr></thead><tbody>`;
+      payments.sort((a, b) => new Date(b.PaymentDate) - new Date(a.PaymentDate));
+      payments.forEach(p => {
+        html += `<tr>
+          <td>${p.Month}</td>
+          <td>${p.Amount} Tk</td>
+          <td><span class="status-badge ${p.Status.toLowerCase()}">${p.Status}</span></td>
+          <td>${p.TrxID}</td>
+          <td>${new Date(p.PaymentDate).toLocaleDateString()}</td>
+        </tr>`;
       });
-      const result = await res.json();
-      if (result.result === 'success') {
-        const rows = result.payments || [];
-        rows.sort((a,b)=>new Date(b.PaymentDate)-new Date(a.PaymentDate));
-        const tbody = document.querySelector('#paymentTable tbody');
-        tbody.innerHTML = rows.map(r => `
-          <tr>
-            <td>${r.month}</td>
-            <td>${r.amount} Tk</td>
-            <td><span class="status-badge ${r.status.toLowerCase()}">${r.status}</span></td>
-            <td>${r.trxid}</td>
-            <td>${new Date(r.date).toLocaleDateString()}</td>
-          </tr>`).join('');
-        updateStats(rows);
-      }
+      html += "</tbody></table></div>";
+      container.innerHTML = html;
     }
 
-    function updateStats(rows) {
-      const total = rows.length;
-      const paid = rows.filter(r => r.status === 'Paid').length;
-      const pending = rows.filter(r => r.status === 'Pending').length;
-      const totalPaid = rows.filter(r => r.status === 'Paid')
-                            .reduce((sum,r)=>sum+parseFloat(r.amount||0),0);
-      animateValue('statTotalPayments', 0, total, 800);
-      animateValue('statPaid', 0, paid, 800);
-      animateValue('statPending', 0, pending, 800);
-      document.getElementById('statTotalAmount').textContent = totalPaid + ' Tk';
+    function updateStats(payments) {
+      const total = payments.length;
+      const paid = payments.filter(p => p.Status.toLowerCase() === "paid").length;
+      const pending = payments.filter(p => p.Status.toLowerCase() === "pending").length;
+      const totalAmount = payments.reduce((sum, p) => sum + (parseFloat(p.Amount) || 0), 0);
+
+      document.getElementById("totalPayments").textContent = total;
+      document.getElementById("paidPayments").textContent = paid;
+      document.getElementById("pendingPayments").textContent = pending;
+      document.getElementById("totalAmount").textContent = totalAmount.toLocaleString();
     }
 
-    function animateValue(id, start, end, duration) {
-      const el = document.getElementById(id);
-      let startTime = null;
-      function step(time) {
-        if (!startTime) startTime = time;
-        const progress = Math.min((time - startTime) / duration, 1);
-        el.textContent = Math.floor(progress * (end - start) + start);
-        if (progress < 1) requestAnimationFrame(step);
-      }
-      requestAnimationFrame(step);
+    function logout() {
+      localStorage.removeItem("currentUser");
+      window.location.href = "index.html";
     }
   </script>
 </body>
