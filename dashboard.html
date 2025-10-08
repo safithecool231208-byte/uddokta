@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard | Student Payment Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+
+  <style>
+    * {margin:0;padding:0;box-sizing:border-box;font-family:'Poppins',sans-serif;}
+    body {background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);min-height:100vh;padding:15px;}
+
+    .dashboard-container{max-width:1200px;margin:auto;}
+    .dashboard-header{
+      background:rgba(255,255,255,0.95);
+      border-radius:20px;padding:20px;margin-bottom:20px;
+      box-shadow:0 10px 25px rgba(0,0,0,0.2);
+      display:flex;justify-content:space-between;align-items:center;
+      flex-wrap:wrap;gap:15px;
+    }
+    .user-info h1{color:#2c3e50;font-size:1.5rem;margin-bottom:5px;}
+    .user-info p{color:#7f8c8d;font-size:1rem;}
+    .user-welcome{color:#667eea;font-weight:600;}
+    .logout-btn{
+      background:#e74c3c;color:#fff;border:none;
+      padding:10px 20px;border-radius:10px;
+      cursor:pointer;transition:all 0.3s ease;font-weight:500;
+    }
+    .logout-btn:hover{background:#c0392b;}
+
+    .dashboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px;}
+    @media(max-width:900px){.dashboard-grid{grid-template-columns:1fr;}}
+
+    .payment-section{
+      background:rgba(255,255,255,0.95);
+      border-radius:15px;padding:20px;
+      box-shadow:0 10px 25px rgba(0,0,0,0.15);
+      transition:all 0.3s ease;
+    }
+    .payment-section:hover{transform:translateY(-3px);}
+    .section-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:15px;border-bottom:2px solid #eee;padding-bottom:10px;}
+    .section-header h3{color:#2c3e50;font-size:1.2rem;display:flex;align-items:center;gap:10px;}
+    .section-header h3 i{color:#667eea;}
+
+    .form-group{margin-bottom:15px;}
+    .form-group label{display:block;margin-bottom:5px;font-weight:500;color:#495057;font-size:0.9rem;}
+    .input-with-icon{position:relative;}
+    .input-with-icon i{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:#6c757d;}
+    .input-with-icon input,.input-with-icon select{
+      width:100%;padding:12px 12px 12px 40px;
+      border:2px solid #e9ecef;border-radius:10px;font-size:14px;
+      transition:all 0.3s ease;background:white;
+    }
+    .input-with-icon input:focus,.input-with-icon select:focus{
+      border-color:#667eea;box-shadow:0 0 0 3px rgba(102,126,234,0.1);outline:none;
+    }
+    .btn{
+      width:100%;padding:12px;
+      background:linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+      color:white;border:none;border-radius:10px;font-size:15px;font-weight:600;
+      cursor:pointer;transition:all 0.3s ease;text-align:center;
+    }
+    .btn:hover{transform:translateY(-2px);box-shadow:0 5px 12px rgba(102,126,234,0.3);}
+    .message{padding:10px;border-radius:8px;margin:10px 0;text-align:center;font-size:0.9rem;}
+    .error{background:#f8d7da;color:#721c24;}
+    .success{background:#d4edda;color:#155724;}
+    .table-responsive{overflow-x:auto;}
+    table{width:100%;border-collapse:collapse;background:white;}
+    th,td{padding:10px;text-align:left;font-size:0.9rem;}
+    th{background:#667eea;color:white;}
+    tr:nth-child(even){background:#f8f9fa;}
+    .status-badge{padding:5px 10px;border-radius:15px;font-size:0.8rem;font-weight:600;}
+    .paid{background:#d4edda;color:#155724;}
+    .pending{background:#fff3cd;color:#856404;}
+    .loading{display:inline-block;width:18px;height:18px;border:3px solid rgba(255,255,255,.3);border-radius:50%;border-top-color:#fff;animation:spin 1s linear infinite;}
+    @keyframes spin{to{transform:rotate(360deg);}}
+    #refreshMessage{text-align:right;color:#28a745;font-size:0.85rem;display:none;}
+
+    /* Mobile-specific */
+    @media(max-width:600px){
+      .user-info h1{font-size:1.3rem;}
+      .user-info p{font-size:0.9rem;}
+      .payment-section{padding:15px;}
+      .btn{font-size:14px;padding:10px;}
+      th,td{font-size:0.8rem;}
+      /* Turn table into cards for very small screens */
+      table, thead, tbody, th, td, tr{display:block;}
+      thead tr{display:none;}
+      tr{margin-bottom:10px;border:1px solid #ddd;border-radius:10px;background:#fff;padding:10px;}
+      td{border:none;padding:5px 0;position:relative;}
+      td::before{content:attr(data-label);font-weight:600;display:block;color:#667eea;margin-bottom:3px;}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="dashboard-container">
+    <div class="dashboard-header">
+      <div class="user-info">
+        <h1>Welcome, <span class="user-welcome" id="userName">User</span>! 👋</h1>
+        <p>Member ID: <strong id="userMemberId">Loading...</strong></p>
+      </div>
+      <button class="logout-btn" onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </div>
+
+    <div class="dashboard-grid">
+      <!-- Submit Payment -->
+      <div class="payment-section">
+        <div class="section-header">
+          <h3><i class="fas fa-plus-circle"></i> Submit New Payment</h3>
+        </div>
+
+        <form id="paymentForm">
+          <div class="form-group">
+            <label>Select Month & Year *</label>
+            <div class="input-with-icon"><i class="fas fa-calendar-alt"></i><select name="Month" id="monthSelect" required></select></div>
+          </div>
+          <div class="form-group">
+            <label>Payment Date *</label>
+            <div class="input-with-icon"><i class="fas fa-calendar-day"></i><input type="date" name="PaymentDate" id="paymentDate" required></div>
+          </div>
+          <div class="form-group">
+            <label>Amount *</label>
+            <div class="input-with-icon"><i class="fas fa-money-bill-wave"></i><input type="number" name="Amount" id="amount" placeholder="Enter Amount" required></div>
+          </div>
+          <div class="form-group">
+            <label>Payment Method *</label>
+            <div class="input-with-icon">
+              <i class="fas fa-university"></i>
+              <select name="Method" id="method" required>
+                <option value="">Select Method</option>
+                <option value="Bkash">Bkash</option>
+                <option value="Nagad">Nagad</option>
+                <option value="Bank">Bank</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group">
+            <label>Phone Number *</label>
+            <div class="input-with-icon"><i class="fas fa-phone"></i><input type="text" name="Number" id="number" placeholder="Enter Phone Number" required></div>
+          </div>
+          <div class="form-group">
+            <label>Transaction ID *</label>
+            <div class="input-with-icon"><i class="fas fa-receipt"></i><input type="text" name="TrxID" id="trxid" placeholder="Enter TrxID" required></div>
+            <div id="duplicateWarning" class="message error" style="display:none;">⚠️ This TrxID already exists in your payment history.</div>
+          </div>
+          <input type="hidden" name="MemberID" id="currentMemberId">
+          <input type="hidden" name="Name" id="currentUserName">
+          <input type="hidden" name="Status" value="Pending">
+          <button type="submit" class="btn" id="submitBtn"><i class="fas fa-paper-plane"></i> Submit Payment</button>
+        </form>
+        <div id="paymentMessage"></div>
+      </div>
+
+      <!-- Payment History -->
+      <div class="payment-section">
+        <div class="section-header">
+          <h3><i class="fas fa-history"></i> Payment History</h3>
+          <button class="btn" id="refreshBtn" onclick="refreshPayments()"><i class="fas fa-sync-alt"></i> Refresh</button>
+        </div>
+        <div id="paymentStatus"></div>
+        <div id="refreshMessage">Refreshed!</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const SCRIPT_URL='https://script.google.com/macros/s/AKfycbxZqHw4DYfsEzgfeuxlBTCeJsuhHqFUiq9yTnQmtua09uqXlHtrgt-_HJi2z5QNfW63/exec';
+    let currentUser=null;let userPayments=[];
+
+    window.addEventListener('load',()=>{
+      const userData=localStorage.getItem('currentUser');
+      if(!userData){window.location.href='index.html';return;}
+      currentUser=JSON.parse(userData);
+      document.getElementById('userName').textContent=currentUser.fullName;
+      document.getElementById('userMemberId').textContent=currentUser.memberId;
+      document.getElementById('currentMemberId').value=currentUser.memberId;
+      document.getElementById('currentUserName').value=currentUser.fullName;
+      generateMonthOptions();setDefaultPaymentDate();loadUserPayments();
+    });
+
+    function generateMonthOptions(){
+      const sel=document.getElementById('monthSelect');
+      const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
+      const y=new Date().getFullYear();
+      for(let i=0;i<12;i++){const o=document.createElement('option');o.value=`${months[i]} ${y}`;o.textContent=`${months[i]} ${y}`;sel.appendChild(o);}
+      for(let i=0;i<12;i++){const o=document.createElement('option');o.value=`${months[i]} ${y+1}`;o.textContent=`${months[i]} ${y+1}`;sel.appendChild(o);}
+    }
+    function setDefaultPaymentDate(){document.getElementById('paymentDate').value=new Date().toISOString().split('T')[0];}
+
+    document.getElementById('trxid').addEventListener('input',()=>{
+      const val=document.getElementById('trxid').value.trim().toLowerCase();
+      const warn=document.getElementById('duplicateWarning');
+      const btn=document.getElementById('submitBtn');
+      const dup=userPayments.some(p=>(p.trxid||'').toLowerCase()===val);
+      if(dup){warn.style.display='block';btn.disabled=true;}else{warn.style.display='none';btn.disabled=false;}
+    });
+
+    async function loadUserPayments(){
+      const res=await fetch(SCRIPT_URL,{method:'POST',body:new URLSearchParams({action:'get_payments',memberId:currentUser.memberId})});
+      const d=await res.json();
+      if(d.result==='success'){userPayments=d.payments.sort((a,b)=>new Date(b.date||b.PaymentDate)-new Date(a.date||a.PaymentDate));displayPayments(userPayments);}
+    }
+
+    async function refreshPayments(){
+      const b=document.getElementById('refreshBtn');const m=document.getElementById('refreshMessage');
+      b.innerHTML='<i class="fas fa-sync-alt fa-spin"></i> Refreshing...';b.disabled=true;
+      await loadUserPayments();
+      b.innerHTML='<i class="fas fa-sync-alt"></i> Refresh';b.disabled=false;m.style.display='block';setTimeout(()=>m.style.display='none',2000);
+    }
+
+    function displayPayments(p){
+      const c=document.getElementById('paymentStatus');
+      if(!p.length){c.innerHTML='<div class="message">No payments yet.</div>';return;}
+      let h='<div class="table-responsive"><table><thead><tr><th>Month</th><th>Amount</th><th>Status</th><th>TrxID</th><th>Payment Date</th></tr></thead><tbody>';
+      p.forEach(x=>{
+        const st=x.status.toLowerCase();const d=new Date(x.date||x.PaymentDate).toLocaleDateString();
+        h+=`<tr><td data-label="Month">${x.month}</td><td data-label="Amount">${x.amount} Tk</td><td data-label="Status"><span class="status-badge ${st}">${x.status}</span></td><td data-label="TrxID">${x.trxid}</td><td data-label="Date">${d}</td></tr>`;
+      });
+      h+='</tbody></table></div>';c.innerHTML=h;
+    }
+
+    document.getElementById('paymentForm').addEventListener('submit',async e=>{
+      e.preventDefault();const btn=e.target.querySelector('button[type="submit"]');const msg=document.getElementById('paymentMessage');
+      btn.innerHTML='<div class="loading"></div> Submitting...';btn.disabled=true;
+      const fd=new FormData(e.target);
+      const res=await fetch(SCRIPT_URL,{method:'POST',body:new URLSearchParams({
+        action:'submit_payment',MemberID:currentUser.memberId,Name:currentUser.fullName,
+        Month:fd.get('Month'),TrxID:fd.get('TrxID'),Amount:fd.get('Amount'),
+        Method:fd.get('Method'),Number:fd.get('Number'),
+        PaymentDate:fd.get('PaymentDate'),Status:'Pending'
+      })});
+      const d=await res.json();
+      if(d.result==='success'){msg.innerHTML='<div class="success">✅ Payment submitted successfully!</div>';e.target.reset();setDefaultPaymentDate();loadUserPayments();}
+      else msg.innerHTML='<div class="error">❌ '+(d.message||'Error submitting payment')+'</div>';
+      btn.innerHTML='<i class="fas fa-paper-plane"></i> Submit Payment';btn.disabled=false;
+    });
+
+    function logout(){localStorage.removeItem('currentUser');window.location.href='index.html';}
+  </script>
+</body>
+</html>
