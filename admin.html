@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard | Uddokta Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+    body {
+      background: #f3f6fb;
+      color: #2c3e50;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .header {
+      background: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .header h2 { color: #0d47a1; }
+    .logout-btn {
+      background: #e74c3c; color: #fff; border: none; padding: 10px 20px;
+      border-radius: 8px; font-weight: 600; cursor: pointer; transition: 0.3s;
+    }
+    .logout-btn:hover { background: #c0392b; }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 20px;
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+    .card:hover { transform: translateY(-4px); box-shadow: 0 6px 20px rgba(0,0,0,0.15); }
+
+    .blue { border-left: 6px solid #42a5f5; }
+    .green { border-left: 6px solid #66bb6a; }
+    .orange { border-left: 6px solid #ffa726; }
+    .purple { border-left: 6px solid #ab47bc; }
+
+    .card h3 { font-size: 1rem; color: #34495e; }
+    .card .number { font-size: 1.8rem; font-weight: 700; margin-top: 8px; }
+
+    .main-content {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+    }
+    @media (min-width: 1200px) {
+      .main-content { grid-template-columns: 1fr 1fr; align-items: start; }
+    }
+
+    .table-container {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      max-height: 600px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .table-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #e0e0e0;
+    }
+
+    .table-header h3 { color: #0d47a1; margin: 0; }
+
+    .refresh-btn {
+      background: #43a047;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: 0.3s;
+    }
+    .refresh-btn:hover { background: #388e3c; }
+    .refresh-btn:disabled { background: #cccccc; cursor: not-allowed; }
+
+    .refresh-icon.refreshing { animation: spin 0.9s linear infinite; }
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+    .table-wrapper {
+      overflow: hidden;
+      border-radius: 8px;
+      border: 1px solid #e0e0e0;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+    .table-wrapper:hover { overflow-y: auto; }
+
+    table { width: 100%; border-collapse: collapse; min-width: 1000px; }
+    th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; font-size: 0.9rem; white-space: nowrap; }
+    th { background: #0d47a1; color: white; position: sticky; top: 0; z-index: 10; }
+    tr:hover { background: #f8f9fa; }
+
+    .status-badge {
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-weight: 600;
+      font-size: 0.8rem;
+      display: inline-block;
+    }
+    .status-paid { background: #c8e6c9; color: #2e7d32; }
+    .status-pending { background: #ffe0b2; color: #ef6c00; }
+
+    /* Approve button */
+    .approve-btn {
+      background: #4caf50;
+      color: white;
+      border: none;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      margin-left: 8px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    .approve-btn:hover { background: #388e3c; }
+
+    /* Users summary */
+    .users-container {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    .users-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #e0e0e0;
+    }
+    .users-header h3 { color: #0d47a1; margin: 0; }
+
+    .users-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 16px;
+    }
+    .user-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+      border-left: 4px solid #42a5f5;
+    }
+    .user-header { display:flex; align-items:center; gap:12px; margin-bottom:10px; }
+    .user-avatar {
+      width:44px;height:44px;border-radius:50%;
+      background:linear-gradient(135deg,#667eea,#764ba2);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;
+    }
+    .user-name { font-weight:700; }
+    .user-email { color:#7f8c8d; font-size:0.9rem; }
+
+    .user-stats { display:flex; gap:10px; margin-bottom:10px; }
+    .stat-item { flex:1; padding:8px; border-radius:8px; background:#f8f9fb; text-align:center; }
+    .stat-label { font-size:0.8rem; color:#7f8c8d; }
+    .stat-value { font-weight:700; font-size:1.1rem; }
+
+    .loading-center { display:flex; align-items:center; justify-content:center; gap:8px; padding:20px; }
+    .loading-spinner {
+      width: 18px;
+      height: 18px;
+      border: 3px solid rgba(0,0,0,0.08);
+      border-top: 3px solid #0d47a1;
+      border-radius: 50%;
+      animation: spin 0.9s linear infinite;
+    }
+
+    @media (max-width: 768px) {
+      .header { flex-direction: column; gap: 10px; text-align: center; }
+      .stats { grid-template-columns: 1fr 1fr; }
+      .main-content { grid-template-columns: 1fr; }
+      .table-container { max-height: 400px; }
+      table { min-width: 800px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h2>Welcome, Admin 👋</h2>
+    <button class="logout-btn" onclick="logout()">Logout</button>
+  </div>
+
+  <div class="stats" aria-live="polite">
+    <div class="card blue">
+      <h3>Total Users</h3>
+      <div class="number" id="totalUsers">0</div>
+    </div>
+    <div class="card green">
+      <h3>Paid Payments</h3>
+      <div class="number" id="paidPayments">0</div>
+    </div>
+    <div class="card orange">
+      <h3>Pending Payments</h3>
+      <div class="number" id="pendingPayments">0</div>
+    </div>
+    <div class="card purple">
+      <h3>Total Amount (Tk)</h3>
+      <div class="number" id="totalAmount">0</div>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <!-- Payments Table -->
+    <div class="table-container" aria-live="polite">
+      <div class="table-header">
+        <h3><i class="fas fa-users"></i> All Users & Payments</h3>
+        <button class="refresh-btn" id="refreshBtn" aria-label="Refresh payments">
+          <i class="fas fa-sync-alt refresh-icon" id="refreshIcon" aria-hidden="true"></i>
+          <span id="refreshText">Refresh</span>
+        </button>
+      </div>
+
+      <div class="table-wrapper" role="region" aria-label="Payments table">
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Member ID</th>
+              <th>Month</th>
+              <th>TrxID</th>
+              <th>Amount</th>
+              <th>Status</th>
+              <th>Method</th>
+              <th>Phone</th>
+              <th>Payment Date</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="paymentsTable">
+            <tr><td colspan="10" class="loading-center"><div class="loading-spinner" aria-hidden="true"></div>Loading payments...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Users Summary -->
+    <div class="users-container" aria-live="polite">
+      <div class="users-header">
+        <h3><i class="fas fa-chart-pie"></i> Users Summary</h3>
+      </div>
+      <div class="users-grid" id="usersGrid">
+        <div class="user-card">
+          <div class="user-header">
+            <div class="user-avatar">...</div>
+            <div>
+              <div class="user-name">Loading users...</div>
+              <div class="user-email">Please wait</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // === Your Apps Script endpoint (keep as your working deployment) ===
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwzEhH_iXZyC3dbc-A40GlsgKnLyY4R3w2lwzY0YQmFf1J7MJ5Pzy_IlXFFQlcYz6Kj/exec";
+
+    const paymentsTable = document.getElementById("paymentsTable");
+    const refreshBtn = document.getElementById("refreshBtn");
+    const refreshIcon = document.getElementById("refreshIcon");
+    const refreshText = document.getElementById("refreshText");
+    const usersGrid = document.getElementById("usersGrid");
+
+    // Utility: safely escape HTML when injecting strings
+    function escapeHtml(str) {
+      if (str === undefined || str === null) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    // Utility: find a field on the returned record ignoring case / small header variations
+    function field(record, keyVariants) {
+      if (!record) return undefined;
+      const keys = Array.isArray(keyVariants) ? keyVariants : [keyVariants];
+      for (const want of keys) {
+        // direct match
+        if (record[want] !== undefined && record[want] !== null && record[want] !== '') return record[want];
+        // try case-insensitive match
+        const foundKey = Object.keys(record).find(k => k.toLowerCase() === want.toLowerCase());
+        if (foundKey && record[foundKey] !== undefined && record[foundKey] !== null && record[foundKey] !== '') return record[foundKey];
+      }
+      return undefined;
+    }
+
+    function setRefreshButtonLoading(isLoading) {
+      refreshBtn.disabled = isLoading;
+      if (isLoading) {
+        refreshIcon.classList.add('refreshing');
+        refreshText.textContent = 'Refreshing...';
+      } else {
+        refreshIcon.classList.remove('refreshing');
+        refreshText.textContent = 'Refresh';
+      }
+    }
+
+    refreshBtn.addEventListener("click", () => loadAllPayments());
+
+    function logout() {
+      window.location.href = "index.html";
+    }
+
+    // Main loader
+    async function loadAllPayments() {
+      // show loading skeletons
+      paymentsTable.innerHTML = `<tr><td colspan="10" class="loading-center"><div class="loading-spinner" aria-hidden="true"></div>Loading payments...</td></tr>`;
+      usersGrid.innerHTML = `<div class="user-card"><div class="user-header"><div class="user-avatar">...</div><div><div class="user-name">Loading users...</div><div class="user-email">Please wait</div></div></div></div>`;
+
+      setRefreshButtonLoading(true);
+
+      try {
+        const res = await fetch(SCRIPT_URL, {
+          method: "POST",
+          body: new URLSearchParams({ action: "get_all_payments" }),
+        });
+        const result = await res.json();
+
+        if (result.result === "success") {
+          const payments = result.payments || [];
+          displayTable(payments);
+          displayUsers(payments);
+          updateStats(payments);
+        } else {
+          paymentsTable.innerHTML = `<tr><td colspan="10">Error: ${escapeHtml(result.message || 'Unknown error')}</td></tr>`;
+          usersGrid.innerHTML = `<div class="user-card"><div class="user-header"><div class="user-avatar">!</div><div><div class="user-name">Error</div><div class="user-email">${escapeHtml(result.message || '')}</div></div></div></div>`;
+          updateStats([]);
+        }
+      } catch (err) {
+        paymentsTable.innerHTML = `<tr><td colspan="10">Network error: ${escapeHtml(err.message || err)}</td></tr>`;
+        usersGrid.innerHTML = `<div class="user-card"><div class="user-header"><div class="user-avatar">!</div><div><div class="user-name">Network Error</div><div class="user-email">${escapeHtml(err.message || '')}</div></div></div></div>`;
+        updateStats([]);
+        console.error("loadAllPayments error:", err);
+      } finally {
+        setRefreshButtonLoading(false);
+      }
+    }
+
+    // Fill payments table
+    function displayTable(payments) {
+      if (!payments || payments.length === 0) {
+        paymentsTable.innerHTML = "<tr><td colspan='10'>No payment data found</td></tr>";
+        return;
+      }
+
+      const rowsHtml = payments.map(p => {
+        const name = escapeHtml(field(p, ['Name','FullName','name'])) || '-';
+        const memberId = escapeHtml(field(p, ['MemberID','Number ID','memberId','Email'])) || '-';
+        const month = escapeHtml(field(p, ['Month','month'])) || '-';
+        const trxId = escapeHtml(field(p, ['TrxID','trxid','Trx Id','Transaction ID'])) || '-';
+        const amountRaw = field(p, ['Amount','amount']) || '0';
+        const amount = escapeHtml(String(amountRaw));
+        const statusRaw = field(p, ['Status','status']) || '-';
+        const status = String(statusRaw);
+        const method = escapeHtml(field(p, ['Method','method']) || '-');
+        const phone = escapeHtml(field(p, ['Phone','Number','phone']) || '-');
+        const paymentDateRaw = field(p, ['PaymentDate','date','Timestamp','Payment Date']) || '';
+        let paymentDate = '-';
+        try {
+          if (paymentDateRaw) {
+            const d = new Date(paymentDateRaw);
+            paymentDate = isNaN(d.getTime()) ? escapeHtml(String(paymentDateRaw)) : d.toLocaleDateString();
+          }
+        } catch (e) {
+          paymentDate = escapeHtml(String(paymentDateRaw));
+        }
+
+        const statusClass = status.toLowerCase() === 'paid' ? 'status-paid' : 'status-pending';
+        const isPending = status.toLowerCase() === 'pending';
+
+        return `
+          <tr>
+            <td>${name}</td>
+            <td>${memberId}</td>
+            <td>${month}</td>
+            <td>${trxId}</td>
+            <td>${amount} Tk</td>
+            <td><span class="status-badge ${statusClass}">${escapeHtml(status)}</span></td>
+            <td>${method}</td>
+            <td>${phone}</td>
+            <td>${paymentDate}</td>
+            <td>
+              ${isPending ? `<button class="approve-btn" data-trx="${escapeHtml(trxId)}">Mark Paid</button>` : `<span style="color:#2e7d32;font-weight:700">Paid</span>`}
+            </td>
+          </tr>
+        `;
+      }).join('');
+
+      paymentsTable.innerHTML = rowsHtml;
+
+      // attach handlers to approve buttons
+      document.querySelectorAll('.approve-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const trx = btn.dataset.trx;
+          markAsPaid(trx);
+        });
+      });
+    }
+
+    // Fill users summary (group by MemberID)
+    function displayUsers(payments) {
+      if (!payments || payments.length === 0) {
+        usersGrid.innerHTML = `<div class="user-card"><div class="user-header"><div class="user-avatar">!</div><div><div class="user-name">No users</div><div class="user-email">No payment data</div></div></div></div>`;
+        return;
+      }
+
+      const usersMap = {};
+      payments.forEach(p => {
+        const memberId = field(p, ['MemberID','Number ID','memberId','Email']) || 'Unknown';
+        const userName = field(p, ['Name','FullName','name']) || memberId;
+        const amount = parseFloat(field(p, ['Amount','amount']) || 0) || 0;
+        const status = String(field(p, ['Status','status']) || '').trim();
+
+        if (!usersMap[memberId]) {
+          usersMap[memberId] = {
+            name: userName,
+            email: memberId,
+            pendingCount: 0,
+            paidCount: 0,
+            pendingAmount: 0,
+            paidAmount: 0,
+            totalAmount: 0
+          };
+        }
+
+        usersMap[memberId].totalAmount += amount;
+        if (status.toLowerCase() === 'pending') {
+          usersMap[memberId].pendingCount++;
+          usersMap[memberId].pendingAmount += amount;
+        } else if (status.toLowerCase() === 'paid') {
+          usersMap[memberId].paidCount++;
+          usersMap[memberId].paidAmount += amount;
+        }
+      });
+
+      const usersArray = Object.keys(usersMap).map(k => usersMap[k]);
+
+      usersGrid.innerHTML = usersArray.map(user => {
+        const firstLetter = (user.name && String(user.name).trim().charAt(0)) ? String(user.name).trim().charAt(0).toUpperCase() : '?';
+        return `
+          <div class="user-card" role="article">
+            <div class="user-header">
+              <div class="user-avatar">${escapeHtml(firstLetter)}</div>
+              <div>
+                <div class="user-name">${escapeHtml(user.name)}</div>
+                <div class="user-email">${escapeHtml(user.email)}</div>
+              </div>
+            </div>
+
+            <div class="user-stats">
+              <div class="stat-item">
+                <div class="stat-label">Pending</div>
+                <div class="stat-value">${user.pendingCount}</div>
+                <div class="stat-label">Amount: ${user.pendingAmount} Tk</div>
+              </div>
+              <div class="stat-item">
+                <div class="stat-label">Paid</div>
+                <div class="stat-value">${user.paidCount}</div>
+                <div class="stat-label">Amount: ${user.paidAmount} Tk</div>
+              </div>
+            </div>
+
+            <div class="payment-details">
+              <div style="display:flex;justify-content:space-between;font-size:0.9rem;margin-top:6px">
+                <div class="detail-label">Total Payments:</div>
+                <div class="detail-value">${user.pendingCount + user.paidCount}</div>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:0.9rem;margin-top:6px">
+                <div class="detail-label">Pending Amount:</div>
+                <div class="detail-value">${user.pendingAmount} Tk</div>
+              </div>
+              <div style="display:flex;justify-content:space-between;font-size:0.9rem;margin-top:6px">
+                <div class="detail-label">Paid Amount:</div>
+                <div class="detail-value">${user.paidAmount} Tk</div>
+              </div>
+            </div>
+
+            <div style="margin-top:10px;background:#e3f2fd;padding:8px;border-radius:8px;text-align:center;font-weight:600;color:#1976d2">
+              Total: ${user.totalAmount} Tk
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Approve (mark as Paid)
+    async function markAsPaid(trxId) {
+      if (!trxId) return;
+      if (!confirm(`Mark payment ${trxId} as Paid?`)) return;
+
+      setRefreshButtonLoading(true);
+      try {
+        const res = await fetch(SCRIPT_URL, {
+          method: "POST",
+          body: new URLSearchParams({
+            action: "update_payment_status",
+            trxId: trxId,
+            status: "Paid"
+          }),
+        });
+        const result = await res.json();
+        if (result.result === "success") {
+          alert("✅ Payment marked as Paid successfully!");
+          await loadAllPayments();
+        } else {
+          alert("❌ Error: " + (result.message || "Failed to update status"));
+        }
+      } catch (err) {
+        alert("⚠️ Network error updating payment: " + (err.message || err));
+        console.error("markAsPaid error:", err);
+      } finally {
+        setRefreshButtonLoading(false);
+      }
+    }
+
+    // Stats update
+    function updateStats(payments) {
+      if (!payments || payments.length === 0) {
+        document.getElementById("totalUsers").textContent = "0";
+        document.getElementById("paidPayments").textContent = "0";
+        document.getElementById("pendingPayments").textContent = "0";
+        document.getElementById("totalAmount").textContent = "0";
+        return;
+      }
+
+      const uniqueMemberIds = [...new Set(payments.map(p => (field(p, ['MemberID','Number ID','memberId','Email']) || '').toString()))].filter(x=>x && x !== 'undefined');
+      const totalUsers = uniqueMemberIds.length;
+
+      const paid = payments.filter(p => (String(field(p,'Status') || field(p,'status') || '').toLowerCase() === 'paid')).length;
+      const pending = payments.filter(p => (String(field(p,'Status') || field(p,'status') || '').toLowerCase() === 'pending')).length;
+      const totalAmount = payments.reduce((sum, p) => {
+        const v = parseFloat(field(p, ['Amount','amount']) || 0);
+        return sum + (isNaN(v) ? 0 : v);
+      }, 0);
+
+      document.getElementById("totalUsers").textContent = totalUsers;
+      document.getElementById("paidPayments").textContent = paid;
+      document.getElementById("pendingPayments").textContent = pending;
+      document.getElementById("totalAmount").textContent = totalAmount.toLocaleString();
+    }
+
+    // initial load
+    loadAllPayments();
+  </script>
+</body>
+</html>
