@@ -1,281 +1,177 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Secure Login & Registration — Payments Portal</title>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap');
     body {
-      font-family: 'Inter', sans-serif;
-      background: linear-gradient(135deg, #1e1f28, #2a2b38, #3b3c4a);
-      color: #fff;
       margin: 0;
-      padding: 0;
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: #222;
     }
-
     .container {
-      max-width: 450px;
-      margin: 50px auto;
-      background: rgba(255, 255, 255, 0.05);
-      border-radius: 20px;
-      padding: 30px;
-      box-shadow: 0 0 25px rgba(0, 0, 0, 0.4);
-    }
-
-    h1 {
-      text-align: center;
-      font-size: 1.6rem;
-      font-weight: 700;
-      color: #fff;
-    }
-
-    h2 {
-      color: #fff;
-      text-align: center;
-    }
-
-    label {
-      font-weight: 600;
-      font-size: 0.9rem;
-      margin-top: 12px;
-      display: block;
-    }
-
-    input {
-      width: 100%;
-      padding: 10px;
-      margin-top: 5px;
-      border-radius: 10px;
-      border: none;
-      outline: none;
       background: #fff;
-      color: #000;
-      font-size: 1rem;
-    }
-
-    button {
-      margin-top: 15px;
-      width: 100%;
-      padding: 12px;
-      border: none;
-      border-radius: 10px;
-      font-size: 1rem;
-      font-weight: 600;
-      cursor: pointer;
+      border-radius: 20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+      padding: 30px;
+      width: 95%;
+      max-width: 450px;
+      text-align: center;
       transition: 0.3s ease;
     }
-
-    button.primary {
+    h1 {
+      color: #333;
+      font-size: 1.5em;
+      margin-bottom: 10px;
+    }
+    h2 {
+      margin: 15px 0 10px;
+      font-size: 1.2em;
+      color: #444;
+    }
+    input {
+      width: 90%;
+      padding: 12px;
+      margin: 6px 0;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      background: #f9f9f9;
+      outline: none;
+      transition: 0.2s;
+    }
+    input:focus {
+      border-color: #6a11cb;
+      box-shadow: 0 0 5px rgba(106,17,203,0.3);
+      background: #fff;
+    }
+    button {
+      width: 45%;
+      padding: 10px;
+      margin: 10px 5px;
+      border: none;
+      border-radius: 10px;
       background: linear-gradient(90deg, #6a11cb, #2575fc);
-      color: white;
-    }
-
-    button.primary:hover {
-      transform: scale(1.02);
-      opacity: 0.9;
-    }
-
-    button.secondary {
-      background: #eee;
-      color: #000;
-    }
-
-    .msg {
-      margin-top: 10px;
-      text-align: center;
+      color: #fff;
       font-weight: 600;
-      display: none;
-      border-radius: 8px;
-      padding: 8px;
+      cursor: pointer;
+      transition: 0.3s;
     }
-
-    .msg.error {
-      background: #ff4d4d;
-      color: white;
+    button:hover {
+      transform: scale(1.05);
+      background: linear-gradient(90deg, #2575fc, #6a11cb);
     }
-
-    .msg.success {
-      background: #00b894;
-      color: white;
+    p {
+      font-size: 0.9em;
+      color: #555;
+      margin-top: 10px;
     }
-
-    .section {
-      margin-top: 25px;
-    }
-
-    .divider {
-      height: 2px;
-      background: rgba(255, 255, 255, 0.2);
-      margin: 25px 0;
-    }
-
-    .title {
-      font-size: 0.9rem;
-      text-align: center;
-      opacity: 0.8;
-    }
+    .hidden { display: none; }
   </style>
 </head>
 <body>
   <div class="container">
-    <h1>Secure Login & Registration — Payments Portal</h1>
+    <h1>Secure Login & Registration<br>— Payments Portal</h1>
 
-    <!-- LOGIN -->
-    <div id="loginSection">
+    <!-- LOGIN SECTION -->
+    <div id="login-section">
       <h2>Member Login</h2>
-      <label>Email</label>
-      <input type="email" id="loginEmail" placeholder="Enter your email" />
-      <label>Password</label>
-      <input type="password" id="loginPass" placeholder="Your password" />
-      <button class="primary" id="btnLogin">Login</button>
-      <button class="secondary" id="btnShowRegister">Go to Register</button>
-      <div id="loginMsg" class="msg"></div>
-      <p class="title">Login with the email and password you registered with.</p>
+      <input type="email" id="loginEmail" placeholder="Email" required><br>
+      <input type="password" id="loginPassword" placeholder="Password" required><br>
+      <button onclick="login()">Login</button>
+      <button onclick="toggleRegister()">Go to Register</button>
+      <p>Login with your registered email and password.</p>
     </div>
 
-    <div class="divider"></div>
-
-    <!-- REGISTER -->
-    <div id="registerSection">
+    <!-- REGISTER SECTION -->
+    <div id="register-section" class="hidden">
       <h2>Register New Member</h2>
-      <div id="regMsg" class="msg"></div>
-
-      <label>Member ID (auto-generated)</label>
-      <input type="text" id="regMemberId" readonly />
-
-      <label>Full Name</label>
-      <input type="text" id="regName" placeholder="Your full name" />
-
-      <label>Email</label>
-      <input type="email" id="regEmail" placeholder="Your email" />
-
-      <label>Password</label>
-      <input type="password" id="regPass" placeholder="Password" />
-
-      <label>Phone Number</label>
-      <input type="tel" id="regNumber" placeholder="Phone number" />
-
-      <label>Address</label>
-      <input type="text" id="regAddress" placeholder="Address" />
-
-      <button class="primary" id="btnRegister">Register</button>
-      <button class="secondary" id="btnBackLogin">Back to Login</button>
-      <p class="title">Use your email + password to log in after registration.</p>
+      <input type="text" id="regName" placeholder="Full Name" required><br>
+      <input type="email" id="regEmail" placeholder="Email" required><br>
+      <input type="password" id="regPassword" placeholder="Password" required><br>
+      <input type="text" id="regPhone" placeholder="Phone Number" required><br>
+      <input type="text" id="regAddress" placeholder="Address" required><br>
+      <button onclick="register()">Register</button>
+      <button onclick="toggleRegister()">Back to Login</button>
+      <p>We store your details in our secure system. Use email + password to log in.</p>
     </div>
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbypMtu8q9NayvGiRNWazRAkG0bnuHeC5EMf19IpYfT4HoVmy9ffOc8sTJuHEVpamqvN/exec";
-    const MEMBER_PREFIX = "M-";
-    const $ = id => document.getElementById(id);
+    const scriptURL = "https://script.google.com/macros/s/AKfycbypMtu8q9NayvGiRNWazRAkG0bnuHeC5EMf19IpYfT4HoVmy9ffOc8sTJuHEVpamqvN/exec";
 
-    function showMsg(el, text, type = 'error') {
-      el.textContent = text;
-      el.className = 'msg ' + (type === 'success' ? 'success' : 'error');
-      el.style.display = 'block';
-      setTimeout(() => el.style.display = 'none', 4500);
+    function toggleRegister() {
+      document.getElementById("login-section").classList.toggle("hidden");
+      document.getElementById("register-section").classList.toggle("hidden");
     }
 
-    function uniqueTimestampId() {
-      const t = Date.now().toString(36).toUpperCase();
-      return MEMBER_PREFIX + t.slice(-5);
-    }
+    async function register() {
+      const name = document.getElementById("regName").value.trim();
+      const email = document.getElementById("regEmail").value.trim();
+      const password = document.getElementById("regPassword").value.trim();
+      const phone = document.getElementById("regPhone").value.trim();
+      const address = document.getElementById("regAddress").value.trim();
 
-    async function generateMemberId(retry = false) {
+      if (!name || !email || !password || !phone || !address) {
+        alert("Please fill in all fields.");
+        return;
+      }
+
+      const data = new URLSearchParams();
+      data.append("action", "register");
+      data.append("Name", name);
+      data.append("Email", email);
+      data.append("Password", password);
+      data.append("Phone", phone);
+      data.append("Address", address);
+
       try {
-        $('regMemberId').value = 'Generating...';
-        const fd = new FormData();
-        fd.append('action', 'get_members');
-        const res = await fetch(SCRIPT_URL, { method: 'POST', body: fd });
-        const json = await res.json();
-        if (json && Array.isArray(json.members) && json.members.length) {
-          let max = 0;
-          json.members.forEach(m => {
-            const id = (m.MemberID || '').trim();
-            const n = id.match(/(\d+)$/);
-            if (n) {
-              const v = parseInt(n[1]);
-              if (v > max) max = v;
-            }
-          });
-          const next = (max + 1).toString().padStart(3, '0');
-          const newId = MEMBER_PREFIX + next;
-          $('regMemberId').value = newId;
-          return newId;
-        } else throw new Error('No members');
+        const res = await fetch(scriptURL, { method: "POST", body: data });
+        const result = await res.json();
+        if (result.result === "success") {
+          alert("Registration successful! You can now log in.");
+          toggleRegister();
+        } else {
+          alert(result.message || "Registration failed.");
+        }
       } catch (e) {
-        const fallback = uniqueTimestampId();
-        $('regMemberId').value = fallback;
-        if (!retry) setTimeout(() => generateMemberId(true), 800);
-        return fallback;
+        alert("Error connecting to server.");
       }
     }
 
-    $('btnShowRegister').onclick = () => window.scrollTo({ top: document.body.scrollHeight, behavior: 'smooth' });
-    $('btnBackLogin').onclick = () => window.scrollTo({ top: 0, behavior: 'smooth' });
+    async function login() {
+      const email = document.getElementById("loginEmail").value.trim();
+      const password = document.getElementById("loginPassword").value.trim();
 
-    $('btnRegister').onclick = async () => {
-      let MemberID = $('regMemberId').value.trim();
-      if (!MemberID || MemberID === 'Generating...') MemberID = await generateMemberId(true);
-      const name = $('regName').value.trim();
-      const email = $('regEmail').value.trim();
-      const pass = $('regPass').value;
-      const number = $('regNumber').value.trim();
-      const addr = $('regAddress').value.trim();
-      if (!name || !email || !pass) return showMsg($('regMsg'), 'Please fill name, email and password', 'error');
-
-      const fd = new FormData();
-      fd.append('action', 'register');
-      fd.append('MemberID', MemberID);
-      fd.append('Name', name);
-      fd.append('Email', email);
-      fd.append('Password', pass);
-      fd.append('Phone', number);
-      fd.append('Address', addr);
-
-      $('btnRegister').disabled = true;
-      $('btnRegister').textContent = 'Registering...';
-      try {
-        const res = await fetch(SCRIPT_URL, { method: 'POST', body: fd });
-        const json = await res.json();
-        if (json?.result === 'success') {
-          showMsg($('regMsg'), 'Registration successful!', 'success');
-          setTimeout(() => location.reload(), 1000);
-        } else showMsg($('regMsg'), json?.message || 'Registration failed', 'error');
-      } catch (e) {
-        showMsg($('regMsg'), 'Network error', 'error');
-      } finally {
-        $('btnRegister').disabled = false;
-        $('btnRegister').textContent = 'Register';
+      if (!email || !password) {
+        alert("Please enter both email and password.");
+        return;
       }
-    };
 
-    $('btnLogin').onclick = async () => {
-      const email = $('loginEmail').value.trim();
-      const pass = $('loginPass').value;
-      if (!email || !pass) return showMsg($('loginMsg'), 'Enter email & password', 'error');
-      const fd = new FormData();
-      fd.append('action', 'login');
-      fd.append('email', email);
-      fd.append('password', pass);
-      $('btnLogin').disabled = true;
-      $('btnLogin').textContent = 'Checking...';
+      const data = new URLSearchParams();
+      data.append("action", "login");
+      data.append("Email", email);
+      data.append("Password", password);
+
       try {
-        const res = await fetch(SCRIPT_URL, { method: 'POST', body: fd });
-        const json = await res.json();
-        if (json?.result === 'success') {
-          showMsg($('loginMsg'), 'Login successful!', 'success');
-        } else showMsg($('loginMsg'), json?.message || 'Login failed', 'error');
+        const res = await fetch(scriptURL, { method: "POST", body: data });
+        const result = await res.json();
+        if (result.result === "success") {
+          localStorage.setItem("userEmail", email);
+          localStorage.setItem("userName", result.name || "");
+          window.location.href = "dashboard.html";
+        } else {
+          alert(result.message || "Invalid email or password.");
+        }
       } catch (e) {
-        showMsg($('loginMsg'), 'Network error', 'error');
-      } finally {
-        $('btnLogin').disabled = false;
-        $('btnLogin').textContent = 'Login';
+        alert("Error connecting to server.");
       }
-    };
-
-    (async () => { await generateMemberId(); })();
+    }
   </script>
 </body>
 </html>
