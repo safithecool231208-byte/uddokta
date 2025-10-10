@@ -1,215 +1,314 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Uddokta — Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-<style>
-:root{
-  --bg1:#3b82f6;
-  --bg2:#7c3aed;
-  --card:rgba(255,255,255,0.92);
-  --muted:#64748b;
-  --paid:#16a34a;
-  --pending:#f59e0b;
-  --danger:#ef4444;
-  --radius:14px;
-  --shadow:0 10px 30px rgba(2,6,23,0.12);
-}
-*{box-sizing:border-box;font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial}
-html,body{margin:0;background:linear-gradient(135deg,var(--bg1),var(--bg2));min-height:100vh;-webkit-font-smoothing:antialiased}
-.container{max-width:1100px;margin:28px auto;padding:20px}
-.card{background:var(--card);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow)}
-h2,h3{margin:0 0 10px}
-button{cursor:pointer}
-.btn{background:linear-gradient(90deg,var(--bg1),var(--bg2));color:#fff;padding:10px 14px;border:none;border-radius:10px;font-weight:600;transition:transform .15s ease}
-.btn:hover{transform:translateY(-3px)}
-.btn.secondary{background:white;color:var(--bg2);border:1px solid #ddd}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin:10px 0}
-.stat{background:white;border-radius:12px;text-align:center;padding:12px;box-shadow:0 4px 12px rgba(0,0,0,0.1)}
-.stat h3{margin:0;color:var(--bg2)}
-.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin-top:10px}
-.input,select{width:100%;padding:10px;border-radius:10px;border:1px solid #ddd;font-size:15px}
-.input:focus{border-color:var(--bg2);outline:none;box-shadow:0 0 5px rgba(124,58,237,0.2)}
-.searchbar{display:flex;gap:8px;align-items:center;margin-top:10px}
-.searchbar input{flex:1;padding:10px;border-radius:10px;border:1px solid #ddd}
-.table-wrap{margin-top:10px;overflow:auto;background:white;border-radius:10px}
-table{width:100%;border-collapse:collapse;min-width:800px}
-th,td{padding:10px;text-align:left;border-bottom:1px solid #eee}
-th{background:var(--bg2);color:white;position:sticky;top:0}
-.badge-paid{background:rgba(22,163,74,0.12);color:var(--paid);padding:6px 10px;border-radius:12px;font-weight:700}
-.badge-pending{background:rgba(245,158,11,0.12);color:var(--pending);padding:6px 10px;border-radius:12px;font-weight:700}
-.msg{padding:10px;border-radius:10px;margin-top:10px;text-align:center;display:none}
-.msg.success{background:linear-gradient(90deg,#16a34a,#059669);color:white}
-.msg.error{background:linear-gradient(90deg,#ef4444,#dc2626);color:white}
-.topbar{display:flex;justify-content:space-between;align-items:center;color:white;margin-bottom:12px;flex-wrap:wrap;gap:8px}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard — Payment Portal</title>
+  <style>
+    body {
+      font-family: "Poppins", sans-serif;
+      background: linear-gradient(135deg, #a18cd1, #fbc2eb);
+      margin: 0;
+      padding: 0;
+      color: #222;
+    }
+    .container {
+      max-width: 1100px;
+      margin: 30px auto;
+      padding: 20px;
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+    h1 {
+      font-size: 1.6em;
+      color: #333;
+    }
+    button {
+      background: linear-gradient(90deg, #6a11cb, #2575fc);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      transform: scale(1.05);
+      background: linear-gradient(90deg, #2575fc, #6a11cb);
+    }
+    .stats {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      margin: 20px 0;
+    }
+    .stat {
+      background: #f9f9f9;
+      padding: 15px;
+      border-radius: 15px;
+      min-width: 150px;
+      box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+      text-align: center;
+      margin: 10px;
+    }
+    .stat h3 {
+      color: #6a11cb;
+      margin-bottom: 5px;
+    }
+    input, select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+      background: #f9f9f9;
+      outline: none;
+    }
+    input:focus, select:focus {
+      border-color: #6a11cb;
+      background: #fff;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 10px;
+      margin-top: 15px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      background: #fff;
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    th, td {
+      padding: 10px;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+    }
+    th {
+      background: #6a11cb;
+      color: #fff;
+    }
+    tr:hover {
+      background: #f5f5f5;
+    }
+    .status-paid {
+      color: #00b894;
+      font-weight: 600;
+    }
+    .status-pending {
+      color: #e17055;
+      font-weight: 600;
+    }
+    .searchbar {
+      margin-top: 15px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .searchbar input {
+      flex: 1;
+    }
+  </style>
 </head>
 <body>
-<div class="container">
-  <div class="topbar">
-    <div>
-      <h2 id="welcome">Welcome, User 👋</h2>
-      <div class="small">Member: <span id="userEmail">email@example.com</span></div>
-    </div>
-    <div class="row" style="display:flex;gap:8px">
-      <button id="logoutBtn" class="btn secondary">Logout</button>
-      <button id="adminBtn" class="btn">Admin</button>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="stats">
-      <div class="stat"><h3 id="tPay">0</h3><p>Total Payments</p></div>
-      <div class="stat"><h3 id="pPay">0</h3><p>Paid</p></div>
-      <div class="stat"><h3 id="pendPay">0</h3><p>Pending</p></div>
-      <div class="stat"><h3 id="totalAmt">0 Tk</h3><p>Total Paid Amount</p></div>
-    </div>
-
-    <h3>Submit New Payment</h3>
-    <div id="payMsg" class="msg"></div>
-    <div class="form-grid">
-      <div><input id="month" class="input" placeholder="Month & Year"></div>
-      <div><input id="pdate" class="input" type="date"></div>
-      <div><input id="amount" class="input" type="number" placeholder="Amount"></div>
+  <div class="container">
+    <div class="topbar">
       <div>
-        <select id="method" class="input">
-          <option value="">Select Method</option>
-          <option>Bkash</option><option>Nagad</option><option>Bank</option><option>Cash</option>
-        </select>
+        <h1 id="welcome">Welcome, User 👋</h1>
+        <p id="userEmail" style="color:#666">Email: example@email.com</p>
       </div>
-      <div><input id="number" class="input" placeholder="Phone Number"></div>
-      <div><input id="trxid" class="input" placeholder="Transaction ID"></div>
-      <div style="grid-column:1/-1"><button id="submitBtn" class="btn">Submit Payment</button></div>
-    </div>
-
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:20px">
-      <h3>Payment History</h3>
-      <div class="searchbar">
-        <input id="searchUser" placeholder="Search by Name, Number, Date, TrxID" oninput="filterUser()">
-        <button id="refreshBtn" class="btn secondary">Refresh</button>
+      <div>
+        <button onclick="logout()">Logout</button>
+        <button onclick="adminLogin()">Admin</button>
       </div>
     </div>
 
-    <div class="table-wrap">
-      <table>
-        <thead><tr><th>Month</th><th>Amount</th><th>Status</th><th>TrxID</th><th>Number</th><th>Date</th></tr></thead>
-        <tbody id="userTable"></tbody>
-      </table>
+    <div class="stats">
+      <div class="stat">
+        <h3 id="totalPayments">0</h3>
+        <p>Total Payments</p>
+      </div>
+      <div class="stat">
+        <h3 id="paidPayments">0</h3>
+        <p>Paid</p>
+      </div>
+      <div class="stat">
+        <h3 id="pendingPayments">0</h3>
+        <p>Pending</p>
+      </div>
+      <div class="stat">
+        <h3 id="totalAmount">0 Tk</h3>
+        <p>Total Paid Amount</p>
+      </div>
     </div>
+
+    <h2>Submit New Payment</h2>
+    <div class="form-grid">
+      <input id="month" placeholder="Month & Year" />
+      <input id="paymentDate" type="date" />
+      <input id="amount" type="number" placeholder="Amount" />
+      <select id="method">
+        <option value="">Select Method</option>
+        <option>Bkash</option>
+        <option>Nagad</option>
+        <option>Bank</option>
+        <option>Cash</option>
+      </select>
+      <input id="number" placeholder="Phone Number" />
+      <input id="trxid" placeholder="Transaction ID" />
+    </div>
+    <button style="margin-top:15px" onclick="submitPayment()">Submit Payment</button>
+
+    <div class="searchbar">
+      <input type="text" id="searchInput" placeholder="Search by Name, Number, Date, or TrxID" oninput="filterTable()" />
+      <button onclick="loadPayments()">Refresh</button>
+    </div>
+
+    <table id="paymentsTable">
+      <thead>
+        <tr>
+          <th>Month</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>TrxID</th>
+          <th>Number</th>
+          <th>Payment Date</th>
+        </tr>
+      </thead>
+      <tbody id="tableBody">
+        <tr><td colspan="6" style="text-align:center;color:#666">No data yet</td></tr>
+      </tbody>
+    </table>
   </div>
-</div>
 
-<script>
-const SCRIPT_URL="https://script.google.com/macros/s/AKfycbypMtu8q9NayvGiRNWazRAkG0bnuHeC5EMf19IpYfT4HoVmy9ffOc8sTJuHEVpamqvN/exec";
-const ADMIN_PASSWORD="admin";
-let currentUser=null;
+  <script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbypMtu8q9NayvGiRNWazRAkG0bnuHeC5EMf19IpYfT4HoVmy9ffOc8sTJuHEVpamqvN/exec";
+    const ADMIN_PASSWORD = "admin";
+    const email = localStorage.getItem("userEmail");
+    const name = localStorage.getItem("userName");
 
-/* ====== Helpers ====== */
-function el(id){return document.getElementById(id);}
-function toast(text,type='success'){
-  const msg=el('payMsg');
-  msg.textContent=text;
-  msg.className='msg '+(type==='success'?'success':'error');
-  msg.style.display='block';
-  setTimeout(()=>msg.style.display='none',4000);
-}
-function loadUser(){
-  try{currentUser=JSON.parse(localStorage.getItem('portalUser')||'null');}catch(e){currentUser=null;}
-  if(!currentUser){window.location.href='index.html';return;}
-  el('welcome').textContent='Welcome, '+(currentUser.name||'User')+' 👋';
-  el('userEmail').textContent=currentUser.email;
-}
-function logout(){localStorage.removeItem('portalUser');window.location.href='index.html';}
+    if (!email) window.location.href = "index.html";
 
-/* ====== Payment Submission ====== */
-async function fetchExistingTrxIDs(){
-  const fd=new FormData();fd.append('action','get_all_payments');
-  const res=await fetch(SCRIPT_URL,{method:'POST',body:fd});
-  const j=await res.json();const set=new Set();
-  if(j&&Array.isArray(j.payments)){j.payments.forEach(p=>{if(p.TrxID)set.add(String(p.TrxID).toLowerCase());});}
-  return set;
-}
-async function submitPayment(){
-  const fd=new FormData();
-  const Month=el('month').value.trim();
-  const PaymentDate=el('pdate').value;
-  const Amount=el('amount').value.trim();
-  const Method=el('method').value;
-  const Number=el('number').value.trim();
-  const TrxID=el('trxid').value.trim();
-  if(!Month||!PaymentDate||!Amount||!Method||!Number||!TrxID){toast('Please fill all fields','error');return;}
-  try{
-    const existing=await fetchExistingTrxIDs();
-    if(existing.has(TrxID.toLowerCase())){toast('Duplicate Transaction ID!','error');return;}
-  }catch(e){console.warn('duplicate check skipped',e);}
-  fd.append('action','submit_payment');
-  fd.append('email',currentUser.email);
-  fd.append('Month',Month);fd.append('PaymentDate',PaymentDate);
-  fd.append('Amount',Amount);fd.append('Method',Method);
-  fd.append('Number',Number);fd.append('TrxID',TrxID);
-  try{
-    const res=await fetch(SCRIPT_URL,{method:'POST',body:fd});
-    const d=await res.json();
-    toast(d.message||'Submitted',d.result==='success'?'success':'error');
-    if(d.result==='success')loadPayments();
-  }catch(err){toast('Network error','error');}
-}
+    document.getElementById("welcome").textContent = `Welcome, ${name || "User"} 👋`;
+    document.getElementById("userEmail").textContent = `Email: ${email}`;
 
-/* ====== Load Payments ====== */
-async function loadPayments(){
-  const fd=new FormData();
-  fd.append('action','get_payments');
-  fd.append('email',currentUser.email);
-  try{
-    const res=await fetch(SCRIPT_URL,{method:'POST',body:fd});
-    const d=await res.json();
-    if(d.result==='success')renderTable(d.payments||[]);
-  }catch(err){toast('Failed to load','error');}
-}
-function renderTable(list){
-  const tb=el('userTable');tb.innerHTML='';
-  let total=0,paid=0,pending=0,amount=0;
-  if(!list.length){tb.innerHTML='<tr><td colspan="6" style="text-align:center;color:#666">No data</td></tr>';}
-  list.forEach(p=>{
-    const s=p.Status||'Pending';
-    total++; if(s==='Paid'){paid++;amount+=Number(p.Amount||0);}else pending++;
-    const cls=s==='Paid'?'badge-paid':'badge-pending';
-    tb.innerHTML+=`<tr><td>${p.Month||''}</td><td>${p.Amount||''}</td>
-      <td><span class="${cls}">${s}</span></td>
-      <td>${p.TrxID||''}</td><td>${p.Number||''}</td><td>${p.PaymentDate||''}</td></tr>`;
-  });
-  el('tPay').textContent=total;
-  el('pPay').textContent=paid;
-  el('pendPay').textContent=pending;
-  el('totalAmt').textContent=amount+' Tk';
-}
+    async function submitPayment() {
+      const month = document.getElementById("month").value.trim();
+      const date = document.getElementById("paymentDate").value.trim();
+      const amount = document.getElementById("amount").value.trim();
+      const method = document.getElementById("method").value.trim();
+      const number = document.getElementById("number").value.trim();
+      const trxid = document.getElementById("trxid").value.trim();
 
-/* ====== Search ====== */
-function filterUser(){
-  const val=el('searchUser').value.toLowerCase();
-  document.querySelectorAll('#userTable tr').forEach(r=>{
-    r.style.display=r.innerText.toLowerCase().includes(val)?'':'none';
-  });
-}
+      if (!month || !date || !amount || !method || !number || !trxid) {
+        alert("Please fill all fields.");
+        return;
+      }
 
-/* ====== Admin ====== */
-function openAdmin(){
-  const p=prompt('Enter admin password:');
-  if(p===ADMIN_PASSWORD){window.location.href='admin.html';}
-  else if(p!==null)alert('Wrong password');
-}
+      const data = new URLSearchParams();
+      data.append("action", "submit_payment");
+      data.append("Email", email);
+      data.append("Month", month);
+      data.append("PaymentDate", date);
+      data.append("Amount", amount);
+      data.append("Method", method);
+      data.append("Number", number);
+      data.append("TrxID", trxid);
 
-/* ====== Events ====== */
-el('logoutBtn').addEventListener('click',logout);
-el('submitBtn').addEventListener('click',submitPayment);
-el('refreshBtn').addEventListener('click',loadPayments);
-el('adminBtn').addEventListener('click',openAdmin);
+      try {
+        const res = await fetch(scriptURL, { method: "POST", body: data });
+        const result = await res.json();
+        if (result.result === "success") {
+          alert("Payment submitted successfully!");
+          loadPayments();
+        } else {
+          alert(result.message || "Error submitting payment.");
+        }
+      } catch (e) {
+        alert("Error connecting to server.");
+      }
+    }
 
-/* ====== Boot ====== */
-loadUser();
-loadPayments();
-</script>
+    async function loadPayments() {
+      const data = new URLSearchParams();
+      data.append("action", "get_payments");
+      data.append("Email", email);
+
+      try {
+        const res = await fetch(scriptURL, { method: "POST", body: data });
+        const result = await res.json();
+
+        const table = document.getElementById("tableBody");
+        table.innerHTML = "";
+
+        let total = 0, paid = 0, pending = 0, totalAmount = 0;
+
+        result.payments?.forEach(p => {
+          total++;
+          const row = document.createElement("tr");
+          const statusClass = p.Status === "Paid" ? "status-paid" : "status-pending";
+          if (p.Status === "Paid") {
+            paid++;
+            totalAmount += Number(p.Amount) || 0;
+          } else pending++;
+          row.innerHTML = `
+            <td>${p.Month}</td>
+            <td>${p.Amount}</td>
+            <td class="${statusClass}">${p.Status}</td>
+            <td>${p.TrxID}</td>
+            <td>${p.Number}</td>
+            <td>${p.PaymentDate}</td>
+          `;
+          table.appendChild(row);
+        });
+
+        if (!total) {
+          table.innerHTML = `<tr><td colspan="6" style="text-align:center;color:#666">No data available</td></tr>`;
+        }
+
+        document.getElementById("totalPayments").textContent = total;
+        document.getElementById("paidPayments").textContent = paid;
+        document.getElementById("pendingPayments").textContent = pending;
+        document.getElementById("totalAmount").textContent = totalAmount + " Tk";
+
+      } catch (e) {
+        alert("Failed to load data.");
+      }
+    }
+
+    function filterTable() {
+      const q = document.getElementById("searchInput").value.toLowerCase();
+      const rows = document.querySelectorAll("#tableBody tr");
+      rows.forEach(row => {
+        row.style.display = row.innerText.toLowerCase().includes(q) ? "" : "none";
+      });
+    }
+
+    function logout() {
+      localStorage.clear();
+      window.location.href = "index.html";
+    }
+
+    function adminLogin() {
+      const pass = prompt("Enter admin password:");
+      if (pass === ADMIN_PASSWORD) window.location.href = "admin.html";
+      else if (pass) alert("Incorrect password.");
+    }
+
+    loadPayments();
+  </script>
 </body>
 </html>
