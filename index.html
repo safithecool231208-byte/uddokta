@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Secure Login & Registration — Payments Portal</title>
   <style>
     body {
@@ -12,42 +12,40 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      min-height: 100vh;
-      color: #222;
+      height: 100vh;
+      color: #333;
     }
     .container {
       background: #fff;
+      padding: 30px;
       border-radius: 20px;
       box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-      padding: 30px;
-      width: 95%;
+      width: 90%;
       max-width: 450px;
       text-align: center;
-      transition: 0.3s ease;
+      transition: all 0.3s ease;
     }
     h1 {
+      font-size: 1.4em;
       color: #333;
-      font-size: 1.5em;
-      margin-bottom: 10px;
     }
     h2 {
-      margin: 15px 0 10px;
       font-size: 1.2em;
+      margin-bottom: 10px;
       color: #444;
     }
     input {
       width: 90%;
-      padding: 12px;
-      margin: 6px 0;
-      border-radius: 10px;
+      padding: 10px;
+      margin: 8px 0;
       border: 1px solid #ccc;
-      background: #f9f9f9;
+      border-radius: 10px;
       outline: none;
+      background: #f9f9f9;
       transition: 0.2s;
     }
     input:focus {
       border-color: #6a11cb;
-      box-shadow: 0 0 5px rgba(106,17,203,0.3);
       background: #fff;
     }
     button {
@@ -57,21 +55,21 @@
       border: none;
       border-radius: 10px;
       background: linear-gradient(90deg, #6a11cb, #2575fc);
-      color: #fff;
+      color: white;
       font-weight: 600;
       cursor: pointer;
       transition: 0.3s;
     }
     button:hover {
       transform: scale(1.05);
-      background: linear-gradient(90deg, #2575fc, #6a11cb);
     }
     p {
       font-size: 0.9em;
-      color: #555;
-      margin-top: 10px;
+      color: #666;
     }
-    .hidden { display: none; }
+    .hidden {
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -80,32 +78,32 @@
 
     <!-- LOGIN SECTION -->
     <div id="login-section">
-      <h2>Member Login</h2>
+      <h2>User Login</h2>
       <input type="email" id="loginEmail" placeholder="Email" required><br>
       <input type="password" id="loginPassword" placeholder="Password" required><br>
       <button onclick="login()">Login</button>
-      <button onclick="toggleRegister()">Go to Register</button>
-      <p>Login with your registered email and password.</p>
+      <button onclick="toggleSection()">Register</button>
+      <p>Login using your registered email and password.</p>
     </div>
 
     <!-- REGISTER SECTION -->
     <div id="register-section" class="hidden">
-      <h2>Register New Member</h2>
+      <h2>Register New Account</h2>
       <input type="text" id="regName" placeholder="Full Name" required><br>
       <input type="email" id="regEmail" placeholder="Email" required><br>
       <input type="password" id="regPassword" placeholder="Password" required><br>
       <input type="text" id="regPhone" placeholder="Phone Number" required><br>
       <input type="text" id="regAddress" placeholder="Address" required><br>
       <button onclick="register()">Register</button>
-      <button onclick="toggleRegister()">Back to Login</button>
-      <p>We store your details in our secure system. Use email + password to log in.</p>
+      <button onclick="toggleSection()">Back to Login</button>
+      <p>Fill in all fields and register securely.</p>
     </div>
   </div>
 
   <script>
-    const scriptURL = "https://script.google.com/macros/s/AKfycbypMtu8q9NayvGiRNWazRAkG0bnuHeC5EMf19IpYfT4HoVmy9ffOc8sTJuHEVpamqvN/exec";
+    const scriptURL = "https://script.google.com/macros/s/AKfycbxN4Ols_YkWquA0pxXvBXloVVtUdrXtgk2YUUyeftftccoruwaczFs3dSmzHMLupDgo/exec";
 
-    function toggleRegister() {
+    function toggleSection() {
       document.getElementById("login-section").classList.toggle("hidden");
       document.getElementById("register-section").classList.toggle("hidden");
     }
@@ -124,20 +122,18 @@
 
       const data = new URLSearchParams();
       data.append("action", "register");
-      data.append("Name", name);
-      data.append("Email", email);
-      data.append("Password", password);
-      data.append("Phone", phone);
-      data.append("Address", address);
+      data.append("name", name);
+      data.append("email", email);
+      data.append("password", password);
+      data.append("phone", phone);
+      data.append("address", address);
 
       try {
         const res = await fetch(scriptURL, { method: "POST", body: data });
-        const result = await res.json();
-        if (result.result === "success") {
-          alert("Registration successful! You can now log in.");
-          toggleRegister();
-        } else {
-          alert(result.message || "Registration failed.");
+        const text = await res.text();
+        alert(text);
+        if (text.includes("Registered Successfully")) {
+          toggleSection();
         }
       } catch (e) {
         alert("Error connecting to server.");
@@ -155,18 +151,17 @@
 
       const data = new URLSearchParams();
       data.append("action", "login");
-      data.append("Email", email);
-      data.append("Password", password);
+      data.append("email", email);
+      data.append("password", password);
 
       try {
         const res = await fetch(scriptURL, { method: "POST", body: data });
-        const result = await res.json();
-        if (result.result === "success") {
+        const text = await res.text();
+        if (text.includes("Login Successful")) {
           localStorage.setItem("userEmail", email);
-          localStorage.setItem("userName", result.name || "");
           window.location.href = "dashboard.html";
         } else {
-          alert(result.message || "Invalid email or password.");
+          alert(text);
         }
       } catch (e) {
         alert("Error connecting to server.");
