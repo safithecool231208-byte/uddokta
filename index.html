@@ -1,400 +1,300 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Login | Student Payment Portal</title>
-
-  <!-- Fonts & icons -->
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
-  <style>
-    :root{
-      --bg1:#667eea;
-      --bg2:#764ba2;
-      --glass-bg: rgba(255,255,255,0.95);
-      --muted:#6c757d;
-      --max-width:520px;
-      --radius:16px;
-    }
-
-    *{box-sizing:border-box;font-family:'Poppins',system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial; -webkit-font-smoothing:antialiased;}
-    html,body{height:100%;margin:0;}
-    body{
-      background: linear-gradient(135deg,var(--bg1) 0%,var(--bg2) 100%);
-      min-height:100vh;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding:20px;
-      color:#243047;
-    }
-
-    .wrap{
-      width:100%;
-      max-width:var(--max-width);
-      margin:0 auto;
-      position:relative;
-      z-index:2;
-    }
-
-    /* decorative bubbles (hidden on small devices to save CPU) */
-    .bg-bubbles{position:absolute;inset:0;pointer-events:none;z-index:1;overflow:hidden}
-    .bg-bubbles li{position:absolute;list-style:none;display:block;border-radius:50%;background:rgba(255,255,255,0.12);opacity:0.9;animation:float 20s linear infinite;}
-    .bg-bubbles li:nth-child(1){width:60px;height:60px;left:6%;bottom:-80px;animation-duration:22s;}
-    .bg-bubbles li:nth-child(2){width:90px;height:90px;left:22%;bottom:-100px;animation-duration:18s;animation-delay:2s;}
-    .bg-bubbles li:nth-child(3){width:40px;height:40px;left:46%;bottom:-70px;animation-duration:26s;animation-delay:4s;}
-    .bg-bubbles li:nth-child(4){width:70px;height:70px;left:68%;bottom:-90px;animation-duration:20s;animation-delay:1s;}
-    .bg-bubbles li:nth-child(5){width:50px;height:50px;left:84%;bottom:-60px;animation-duration:24s;animation-delay:3s;}
-    @keyframes float { from{transform:translateY(0) rotate(0);opacity:1} to{transform:translateY(-1100px) rotate(720deg);opacity:0} }
-    @media (max-width:600px){ .bg-bubbles{display:none;} }
-
-    .card{
-      background:var(--glass-bg);
-      border-radius:var(--radius);
-      box-shadow:0 14px 40px rgba(2,6,23,0.28);
-      overflow:hidden;
-      border:1px solid rgba(0,0,0,0.04);
-    }
-
-    .card-header{
-      background: linear-gradient(135deg,var(--bg1),var(--bg2));
-      color:#fff;
-      padding:28px 22px;
-      text-align:center;
-    }
-    .logo{font-size:48px;line-height:1;margin-bottom:8px;display:inline-block;}
-    .card-header h1{font-size:20px;margin:0 0 6px;font-weight:600;}
-    .card-header p{margin:0;font-size:13px;opacity:0.95}
-
-    .tabs{display:flex;background:#f7f9fb;border-bottom:1px solid #eef2f7}
-    .tab-btn{
-      flex:1;
-      padding:14px;
-      text-align:center;
-      cursor:pointer;
-      font-weight:600;
-      color:var(--muted);
-      border:none;background:transparent;
-      font-size:14px;
-    }
-    .tab-btn[aria-selected="true"]{background: #fff;color:#243047;box-shadow: inset 0 -3px 0 rgba(102,126,234,0.08);}
-
-    .card-body{padding:18px;display:grid;gap:12px}
-
-    form{display:grid;gap:12px}
-    label{display:block;font-size:13px;margin-bottom:6px;color:#404b57}
-    .input-wrap{position:relative}
-    .input-wrap i{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:14px}
-
-    /* Important: padding-left for left icon, padding-right to make space for eye button */
-    .input-wrap input, .input-wrap select {
-      width:100%;
-      padding:12px 48px 12px 44px;
-      border-radius:10px;
-      border:2px solid #e9eef6;
-      font-size:15px;
-      outline:none;
-      background:#fff;
-    }
-    .input-wrap input::placeholder{color:#a6b0bc}
-    .input-wrap input:focus, .input-wrap select:focus { box-shadow:0 6px 18px rgba(102,126,234,0.12); outline:none; border-color: rgba(102,126,234,0.4); }
-
-    /* show/hide password icon — FIXED placement */
-    .toggle-pass{
-      position:absolute;
-      right:10px;
-      top:50%;
-      transform:translateY(-50%);
-      background:transparent;
-      border:none;
-      color:var(--muted);
-      padding:6px;
-      border-radius:8px;
-      cursor:pointer;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      height:32px;
-      width:32px;
-    }
-    .toggle-pass:active{transform:translateY(-50%) scale(0.98)}
-    .toggle-pass i{font-size:15px}
-
-    .btn{
-      display:inline-flex;align-items:center;justify-content:center;gap:10px;width:100%;padding:12px;border-radius:10px;border:none;
-      background:linear-gradient(135deg,var(--bg1),var(--bg2));
-      color:#fff;font-weight:700;font-size:15px;cursor:pointer;box-shadow:0 8px 18px rgba(102,126,234,0.18);
-    }
-    .btn[disabled]{opacity:0.6;cursor:not-allowed}
-
-    .btn .loading { display:inline-block;width:18px;height:18px;border:3px solid rgba(255,255,255,.3);border-radius:50%;border-top-color:#fff;animation:spin 1s linear infinite; }
-    @keyframes spin { to { transform: rotate(360deg); } }
-
-    .message{padding:10px;border-radius:8px;font-size:14px;text-align:center}
-    .success{background:#e6f6ea;color:#0b6b2f;border:1px solid rgba(11,107,47,0.08)}
-    .error{background:#fff0f0;color:#941b1b;border:1px solid rgba(148,27,27,0.06)}
-
-    .small {font-size:13px;color:#6b7682;text-align:center}
-
-    @media (max-width:420px){
-      :root{--max-width:390px}
-      .card-header{padding:20px}
-      .logo{font-size:40px}
-      .card-body{padding:14px}
-      .input-wrap input, .input-wrap select { padding:10px 44px 10px 40px; font-size:14px; }
-      .tab-btn{padding:12px;font-size:13px}
-      .toggle-pass{right:8px;height:30px;width:30px}
-    }
-
-    .tab-btn:focus, .btn:focus, .input-wrap input:focus, .input-wrap select:focus{box-shadow:0 6px 18px rgba(102,126,234,0.12);outline:none;border-color:rgba(102,126,234,0.5);}
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Uddokta — Login & Register</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ================= THEME / LAYOUT (pro, smooth) ================= */
+  :root{
+    --bg1:#2563eb;
+    --bg2:#7c3aed;
+    --card: rgba(255,255,255,0.95);
+    --muted:#64748b;
+    --accent: linear-gradient(90deg,#2563eb,#7c3aed);
+    --radius:14px;
+    --shadow: 0 12px 30px rgba(2,6,23,0.12);
+    --glass-blur:6px;
+    --success:#16a34a;
+    --danger:#ef4444;
+  }
+  *{box-sizing:border-box;font-family:'Poppins',system-ui,Segoe UI,Roboto,Arial}
+  html,body{height:100%;margin:0;background:linear-gradient(135deg,var(--bg1),var(--bg2));-webkit-font-smoothing:antialiased}
+  .wrap{max-width:1100px;margin:28px auto;padding:20px}
+  .header{display:flex;justify-content:space-between;align-items:center;color:#fff;margin-bottom:18px;gap:12px;flex-wrap:wrap}
+  .brand{font-weight:700;font-size:20px}
+  .subtitle{color:rgba(255,255,255,0.95);font-size:14px}
+  /* card */
+  .card{background:var(--card);border-radius:var(--radius);padding:22px;box-shadow:var(--shadow);backdrop-filter:blur(var(--glass-blur));transition:transform .35s cubic-bezier(.2,.9,.2,1),box-shadow .35s}
+  .card:hover{transform:translateY(-4px);box-shadow:0 20px 48px rgba(2,6,23,0.16)}
+  /* grid */
+  .auth-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+  @media(max-width:880px){ .auth-grid{grid-template-columns:1fr} .header{flex-direction:column;align-items:flex-start} }
+  h2{margin:0 0 8px}
+  .small{color:var(--muted);font-size:13px}
+  label{display:block;margin:8px 0 6px;font-size:13px;color:#334155}
+  .input,select{width:100%;padding:12px;border-radius:10px;border:1px solid #e6eef9;font-size:15px;outline:none}
+  .input:focus{box-shadow:0 10px 26px rgba(59,130,246,0.12);border-color:var(--bg2)}
+  .row{display:flex;gap:10px;align-items:center}
+  .btn{background:var(--accent);color:white;padding:10px 14px;border:none;border-radius:10px;font-weight:700;cursor:pointer;transition:all .16s ease}
+  .btn:hover{transform:translateY(-3px);opacity:.98}
+  .btn.secondary{background:white;color:var(--bg2);border:1px solid rgba(0,0,0,0.06)}
+  .link{color:var(--bg2);cursor:pointer;text-decoration:underline;font-weight:600}
+  .msg{padding:10px;border-radius:10px;margin-top:10px;display:none}
+  .msg.success{background:linear-gradient(90deg,#16a34a,#059669);color:#fff}
+  .msg.error{background:linear-gradient(90deg,#ef4444,#dc2626);color:#fff}
+  .meta{font-size:13px;color:var(--muted);margin-top:10px}
+  /* subtle floating labels effect (pro touch) */
+  .floating {position:relative}
+  .floating .label{position:absolute;left:12px;top:10px;color:var(--muted);font-size:12px;pointer-events:none;transition:all .18s}
+  .floating input:focus + .label, .floating input:not(:placeholder-shown) + .label {transform:translateY(-22px);font-size:11px;opacity:.9}
+  /* helper small */
+  .top-actions{display:flex;gap:8px;align-items:center}
+</style>
 </head>
 <body>
-  <ul class="bg-bubbles" aria-hidden="true">
-    <li></li><li></li><li></li><li></li><li></li>
-  </ul>
-
-  <main class="wrap" role="main">
-    <section class="card" aria-labelledby="portalTitle">
-      <div class="card-header">
-        <span class="logo" aria-hidden="true"><i class="fas fa-wallet"></i></span>
-        <h1 id="portalTitle">Student Payment Portal</h1>
-        <p>Secure access to your payment dashboard</p>
+  <div class="wrap">
+    <div class="header" role="banner">
+      <div>
+        <div class="brand">Uddokta — Payment Portal</div>
+        <div class="subtitle">Secure login and registration — Payments portal</div>
       </div>
+      <div class="top-actions">
+        <button id="openDashboardBtn" class="btn secondary" title="Open Dashboard (if logged)">Open Dashboard</button>
+        <button id="adminBtnTop" class="btn">Admin</button>
+      </div>
+    </div>
 
-      <nav class="tabs" role="tablist" aria-label="Authentication tabs">
-        <button class="tab-btn" role="tab" aria-selected="true" data-target="login" id="tab-login"> <i class="fas fa-sign-in-alt" aria-hidden="true"></i> Login</button>
-        <button class="tab-btn" role="tab" aria-selected="false" data-target="register" id="tab-register"> <i class="fas fa-user-plus" aria-hidden="true"></i> Register</button>
-      </nav>
+    <div class="card auth-card">
+      <div class="auth-grid">
+        <!-- Login -->
+        <div>
+          <h2>Member Login</h2>
+          <div id="loginMsg" class="msg error" aria-live="polite"></div>
 
-      <div class="card-body">
-        <!-- LOGIN -->
-        <div id="login" role="tabpanel" aria-labelledby="tab-login">
-          <form id="loginForm" autocomplete="on" novalidate>
-            <div>
-              <label for="loginEmail">Email address</label>
-              <div class="input-wrap">
-                <i class="fas fa-envelope" aria-hidden="true"></i>
-                <input id="loginEmail" name="email" type="email" inputmode="email" placeholder="you@example.com" required autocomplete="email" />
-              </div>
-            </div>
+          <label>Email</label>
+          <input id="loginEmail" class="input" type="email" placeholder="you@example.com" autocomplete="username" />
 
-            <div>
-              <label for="loginPassword">Password</label>
-              <div class="input-wrap" style="position:relative;">
-                <i class="fas fa-lock" aria-hidden="true"></i>
-                <input id="loginPassword" name="password" type="password" placeholder="Enter your password" required autocomplete="current-password" minlength="4" />
-                <button type="button" class="toggle-pass" aria-label="Show password" id="toggleLoginPass"><i class="fas fa-eye"></i></button>
-              </div>
-            </div>
+          <label style="margin-top:10px">Password</label>
+          <input id="loginPass" class="input" type="password" placeholder="Your password" autocomplete="current-password" />
 
-            <button class="btn" id="loginBtn" type="submit">
-              <span class="btn-text"><i class="fas fa-paper-plane"></i> Sign in</span>
-              <span class="btn-loading" style="display:none;margin-left:6px"><span class="loading" aria-hidden="true"></span></span>
-            </button>
-          </form>
+          <div style="margin-top:12px" class="row">
+            <button id="btnLogin" class="btn">Login</button>
+            <button id="btnShowRegister" class="btn secondary">Go to Register</button>
+          </div>
 
-          <div id="loginMessage" class="message" aria-live="polite" style="display:none"></div>
-          <p class="small">Don't have an account? <button class="tab-btn" data-target="register" style="background:none;border:none;color:var(--bg1);padding:0;font-weight:700;cursor:pointer">Register</button></p>
+          <div class="meta">Login with the email and password you registered with. Forgotten password recovery is not implemented here.</div>
         </div>
 
-        <!-- REGISTER -->
-        <div id="register" role="tabpanel" hidden>
-          <form id="registerForm" autocomplete="on" novalidate>
-            <div>
-              <label for="regFullName">Full name</label>
-              <div class="input-wrap">
-                <i class="fas fa-user" aria-hidden="true"></i>
-                <input id="regFullName" name="fullName" type="text" placeholder="Your name" required autocomplete="name" />
-              </div>
-            </div>
+        <!-- Register -->
+        <div>
+          <h2>Register New Member</h2>
+          <div id="regMsg" class="msg" aria-live="polite"></div>
 
-            <div>
-              <label for="regEmail">Email address</label>
-              <div class="input-wrap">
-                <i class="fas fa-envelope" aria-hidden="true"></i>
-                <input id="regEmail" name="email" type="email" inputmode="email" placeholder="you@example.com" required autocomplete="email" />
-              </div>
-            </div>
+          <!-- MemberID will be generated automatically (shown read-only so user sees it) -->
+          <label>Member ID (auto-generated)</label>
+          <input id="regMemberId" class="input" readonly placeholder="Generating..." />
 
-            <div>
-              <label for="regPassword">Password</label>
-              <div class="input-wrap" style="position:relative;">
-                <i class="fas fa-lock" aria-hidden="true"></i>
-                <input id="regPassword" name="password" type="password" placeholder="Minimum 4 characters" required minlength="4" autocomplete="new-password" />
-                <button type="button" class="toggle-pass" aria-label="Show password" id="toggleRegPass"><i class="fas fa-eye"></i></button>
-              </div>
-            </div>
+          <label style="margin-top:8px">Full Name</label>
+          <input id="regName" class="input" placeholder="Your full name" autocomplete="name" />
 
-            <div>
-              <label for="regMemberId">Member ID</label>
-              <div class="input-wrap">
-                <i class="fas fa-id-card" aria-hidden="true"></i>
-                <input id="regMemberId" name="memberId" type="text" placeholder="e.g. safi" required />
-              </div>
-            </div>
+          <label style="margin-top:8px">Email</label>
+          <input id="regEmail" class="input" type="email" placeholder="you@example.com" autocomplete="email" />
 
-            <div>
-              <label for="regPhone">Phone number</label>
-              <div class="input-wrap">
-                <i class="fas fa-phone" aria-hidden="true"></i>
-                <input id="regPhone" name="phone" inputmode="tel" pattern="[0-9+ ]{6,20}" placeholder="e.g. 017XXXXXXXX" required />
-              </div>
-            </div>
+          <label style="margin-top:8px">Password</label>
+          <input id="regPass" class="input" type="password" placeholder="Choose a password" autocomplete="new-password" />
 
-            <button class="btn" id="registerBtn" type="submit">
-              <span class="btn-text"><i class="fas fa-user-plus"></i> Create account</span>
-              <span class="btn-loading" style="display:none;margin-left:6px"><span class="loading" aria-hidden="true"></span></span>
-            </button>
-          </form>
+          <label style="margin-top:8px">Phone Number</label>
+          <input id="regNumber" class="input" placeholder="017xxxxxxxx" />
 
-          <div id="registerMessage" class="message" aria-live="polite" style="display:none"></div>
-          <p class="small">Already have an account? <button class="tab-btn" data-target="login" style="background:none;border:none;color:var(--bg1);padding:0;font-weight:700;cursor:pointer">Login</button></p>
+          <label style="margin-top:8px">Address</label>
+          <input id="regAddress" class="input" placeholder="City / Area" />
+
+          <div style="margin-top:12px" class="row">
+            <button id="btnRegister" class="btn">Register</button>
+            <button id="btnBackLogin" class="btn secondary">Back to Login</button>
+          </div>
+
+          <div class="meta">We store your details in the Members sheet. Use email + password to log in afterwards.</div>
         </div>
       </div>
-    </section>
-  </main>
+    </div>
+  </div>
 
-  <script>
-    // === Updated Apps Script URL ===
-    const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwzEhH_iXZyC3dbc-A40GlsgKnLyY4R3w2lwzY0YQmFf1J7MJ5Pzy_IlXFFQlcYz6Kj/exec';
+<script>
+/* ================= CONFIG ================= */
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbypMtu8q9NayvGiRNWazRAkG0bnuHeC5EMf19IpYfT4HoVmy9ffOc8sTJuHEVpamqvN/exec";
+const ADMIN_PASSWORD = "admin";
+const MEMBER_PREFIX = "M-";
 
-    // Tab handling (keyboard friendly)
-    document.querySelectorAll('.tab-btn').forEach(btn=>{
-      btn.addEventListener('click', ()=> switchTab(btn.dataset.target));
-      btn.addEventListener('keydown', (e)=>{ if(e.key==='Enter' || e.key===' '){ e.preventDefault(); switchTab(btn.dataset.target);} });
-    });
+/* ================= HELPERS ================= */
+const $ = id => document.getElementById(id);
+function showMsg(el, text, type='error'){
+  if(!el) return;
+  el.textContent = text;
+  el.className = 'msg ' + (type==='success' ? 'success' : 'error');
+  el.style.display = 'block';
+  setTimeout(()=> { el.style.display = 'none'; }, 4500);
+}
+function saveUser(user){ localStorage.setItem('portalUser', JSON.stringify(user)); }
+function getUser(){ try{ return JSON.parse(localStorage.getItem('portalUser')||'null'); }catch(e){return null;} }
+function goDashboard(){ window.location.href = 'dashboard.html'; }
+function uniqueTimestampId(){ // fallback unique ID
+  const t = Date.now().toString(36).toUpperCase();
+  return MEMBER_PREFIX + t.slice(-6);
+}
 
-    function switchTab(target){
-      // tabs
-      document.querySelectorAll('.tab-btn').forEach(b=>{
-        b.setAttribute('aria-selected', b.dataset.target === target ? 'true':'false');
+/* ================= AUTO MEMBER ID =================
+  Try to fetch members from Apps Script (action=get_members).
+  If script endpoint doesn't implement it, fallback to timestamp-based ID.
+  If get_members returns member rows with MemberID column we generate next incremental M-XXX.
+*/
+async function generateMemberId(){
+  // optimistic UI
+  $('regMemberId').value = 'Generating...';
+  try {
+    const fd = new FormData();
+    fd.append('action', 'get_members'); // expected endpoint (may or may not exist)
+    const res = await fetch(SCRIPT_URL, { method: 'POST', body: fd });
+    const json = await res.json();
+    if(json && Array.isArray(json.members) && json.members.length){
+      // gather existing MemberIDs, find largest numeric suffix
+      const ids = json.members.map(m => (m.MemberID||'').toString().trim()).filter(Boolean);
+      let max = 0;
+      ids.forEach(id => {
+        const m = id.match(/(\d+)$/);
+        if(m) { const n = parseInt(m[1],10); if(n > max) max = n; }
       });
-      // panels
-      ['login','register'].forEach(id=>{
-        const panel = document.getElementById(id);
-        const selected = id === target;
-        panel.hidden = !selected;
-        panel.setAttribute('aria-hidden', (!selected).toString());
-      });
-      // focus first input
-      setTimeout(()=>{
-        const first = document.querySelector(`#${target} input`);
-        if(first) first.focus();
-      }, 50);
+      const next = (max + 1).toString().padStart(3,'0');
+      const newId = MEMBER_PREFIX + next;
+      $('regMemberId').value = newId;
+      return newId;
+    } else {
+      // fallback: timestamp unique id
+      const fallback = uniqueTimestampId();
+      $('regMemberId').value = fallback;
+      return fallback;
     }
+  } catch (err) {
+    // network or endpoint not implemented -> fallback
+    const fallback = uniqueTimestampId();
+    $('regMemberId').value = fallback;
+    return fallback;
+  }
+}
 
-    // Password toggles (keeps icons inside box)
-    function togglePassword(btnId, inputId){
-      const btn = document.getElementById(btnId);
-      const input = btn && document.getElementById(inputId);
-      if(!btn || !input) return;
-      btn.addEventListener('click', ()=>{
-        const isPwd = input.type === 'password';
-        input.type = isPwd ? 'text' : 'password';
-        btn.innerHTML = isPwd ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
-        btn.setAttribute('aria-pressed', String(isPwd));
-      });
+/* ================= UI BINDINGS ================= */
+$('btnShowRegister').addEventListener('click', ()=> { window.scrollTo({ top:0, behavior:'smooth' }); $('regName').focus(); });
+$('btnBackLogin').addEventListener('click', ()=> { window.scrollTo({ top:0, behavior:'smooth' }); $('loginEmail').focus(); });
+$('openDashboardBtn').addEventListener('click', ()=> { const user = getUser(); if(user) goDashboard(); else showMsg($('loginMsg'), 'You must login first to open dashboard', 'error'); });
+$('adminBtnTop').addEventListener('click', ()=> { const p=prompt('Enter admin password:'); if(p===ADMIN_PASSWORD) window.location.href='admin.html'; else if(p!==null) alert('Incorrect admin password'); });
+
+/* ================= REGISTER =================
+  Sends:
+    action=register
+    MemberID, name, email, password, number, address
+  Expects:
+    { result: "success", message: "..." } or error form
+*/
+$('btnRegister').addEventListener('click', async ()=>{
+  const MemberID = $('regMemberId').value.trim();
+  const name = $('regName').value.trim();
+  const email = $('regEmail').value.trim();
+  const password = $('regPass').value;
+  const number = $('regNumber').value.trim();
+  const address = $('regAddress').value.trim();
+
+  if(!MemberID){ showMsg($('regMsg'), 'MemberID missing - please refresh', 'error'); return; }
+  if(!name || !email || !password){ showMsg($('regMsg'), 'Please fill name, email and password', 'error'); return; }
+  if(password.length < 4){ showMsg($('regMsg'), 'Password must be at least 4 characters', 'error'); return; }
+
+  // build form
+  const fd = new FormData();
+  fd.append('action','register');
+  fd.append('MemberID', MemberID);
+  fd.append('Name', name);
+  fd.append('Email', email);
+  fd.append('Password', password);
+  fd.append('Phone', number);
+  fd.append('Address', address);
+
+  try {
+    $('btnRegister').disabled = true;
+    $('btnRegister').textContent = 'Registering...';
+    const res = await fetch(SCRIPT_URL, { method: 'POST', body: fd });
+    const json = await res.json();
+    if(json && json.result === 'success'){
+      showMsg($('regMsg'), json.message || 'Registered successfully', 'success');
+      // save user and redirect to dashboard
+      saveUser({ email, name, MemberID });
+      setTimeout(()=> goDashboard(), 900);
+    } else {
+      showMsg($('regMsg'), (json && json.message) ? json.message : 'Registration failed', 'error');
+      // if script returns new suggested MemberID (rare) update input
+      if(json && json.MemberID) $('regMemberId').value = json.MemberID;
     }
-    togglePassword('toggleLoginPass','loginPassword');
-    togglePassword('toggleRegPass','regPassword');
+  } catch (err) {
+    console.error('register error', err);
+    showMsg($('regMsg'), 'Network error while registering', 'error');
+  } finally {
+    $('btnRegister').disabled = false;
+    $('btnRegister').textContent = 'Register';
+  }
+});
 
-    // Redirect if already logged in
-    window.addEventListener('load', ()=>{
-      try{
-        const u = localStorage.getItem('currentUser');
-        if(u) location.href = 'dashboard.html';
-      }catch(e){}
-      // ensure initial tab
-      switchTab('login');
-    });
+/* ================= LOGIN =================
+  Sends:
+    action=login
+    email, password
+  Expects:
+    { result:"success", name:"Full Name", message:"...", MemberID:"M-001" } on success
+*/
+$('btnLogin').addEventListener('click', async ()=>{
+  const email = $('loginEmail').value.trim();
+  const password = $('loginPass').value;
+  if(!email || !password){ showMsg($('loginMsg'), 'Enter email and password', 'error'); return; }
 
-    // helper to show messages
-    function showMessage(elem, text, kind='success'){
-      elem.style.display = 'block';
-      elem.className = 'message ' + (kind === 'error' ? 'error' : 'success');
-      elem.textContent = text;
-      elem.focus?.();
+  const fd = new FormData();
+  fd.append('action','login');
+  fd.append('email', email);
+  fd.append('password', password);
+
+  try {
+    $('btnLogin').disabled = true;
+    $('btnLogin').textContent = 'Checking...';
+    const res = await fetch(SCRIPT_URL, { method: 'POST', body: fd });
+    const json = await res.json();
+    if(json && json.result === 'success'){
+      const name = json.name || email;
+      const memberId = json.MemberID || (json.memberId || null);
+      saveUser({ email, name, MemberID: memberId });
+      showMsg($('loginMsg'), json.message || 'Login successful', 'success');
+      setTimeout(()=> goDashboard(), 700);
+    } else {
+      showMsg($('loginMsg'), (json && json.message) ? json.message : 'Login failed', 'error');
     }
-    function hideMessage(elem){
-      elem.style.display = 'none';
-      elem.textContent = '';
-    }
+  } catch (err) {
+    console.error('login error', err);
+    showMsg($('loginMsg'), 'Network error while logging in', 'error');
+  } finally {
+    $('btnLogin').disabled = false;
+    $('btnLogin').textContent = 'Login';
+  }
+});
 
-    // LOGIN submit
-    document.getElementById('loginForm').addEventListener('submit', async (e)=>{
-      e.preventDefault();
-      hideMessage(document.getElementById('loginMessage'));
-      const btn = document.getElementById('loginBtn');
-      btn.querySelector('.btn-text').style.display='none';
-      btn.querySelector('.btn-loading').style.display='inline-block';
-      btn.disabled = true;
+/* ================= BOOT ================= */
+(async function boot(){
+  // try generate MemberID
+  await generateMemberId();
 
-      const form = e.target;
-      const data = new URLSearchParams();
-      data.append('action','login');
-      data.append('email', form.email.value.trim());
-      data.append('password', form.password.value);
-
-      try{
-        const res = await fetch(SCRIPT_URL,{method:'POST',body:data});
-        const j = await res.json();
-        if(j.result === 'success'){
-          localStorage.setItem('currentUser', JSON.stringify(j.user));
-          showMessage(document.getElementById('loginMessage'),'Login successful — redirecting...', 'success');
-          setTimeout(()=> location.href = 'dashboard.html', 800);
-        } else {
-          showMessage(document.getElementById('loginMessage'), j.message || 'Invalid credentials', 'error');
-        }
-      }catch(err){
-        showMessage(document.getElementById('loginMessage'),'Network error — try again','error');
-      } finally {
-        btn.querySelector('.btn-text').style.display='inline-flex';
-        btn.querySelector('.btn-loading').style.display='none';
-        btn.disabled = false;
-      }
-    });
-
-    // REGISTER submit
-    document.getElementById('registerForm').addEventListener('submit', async (e)=>{
-      e.preventDefault();
-      hideMessage(document.getElementById('registerMessage'));
-      const btn = document.getElementById('registerBtn');
-      btn.querySelector('.btn-text').style.display='none';
-      btn.querySelector('.btn-loading').style.display='inline-block';
-      btn.disabled = true;
-
-      const form = e.target;
-      const data = new URLSearchParams();
-      data.append('action','register');
-      data.append('email', form.email.value.trim());
-      data.append('password', form.password.value);
-      data.append('memberId', form.memberId.value.trim());
-      data.append('fullName', form.fullName.value.trim());
-      data.append('phone', form.phone.value.trim());
-
-      try{
-        const res = await fetch(SCRIPT_URL,{method:'POST',body:data});
-        const j = await res.json();
-        if(j.result === 'success'){
-          showMessage(document.getElementById('registerMessage'), 'Registration successful — please sign in.', 'success');
-          // switch to login tab and reset
-          document.getElementById('registerForm').reset();
-          switchTab('login');
-        } else {
-          showMessage(document.getElementById('registerMessage'), j.message || 'Registration error', 'error');
-        }
-      }catch(err){
-        showMessage(document.getElementById('registerMessage'),'Network error — try again','error');
-      } finally {
-        btn.querySelector('.btn-text').style.display='inline-flex';
-        btn.querySelector('.btn-loading').style.display='none';
-        btn.disabled = false;
-      }
-    });
-
-  </script>
+  // if user already logged in, redirect to dashboard quickly
+  const saved = getUser();
+  if(saved && saved.email){
+    // small delay to show the page
+    setTimeout(()=> { goDashboard(); }, 350);
+  }
+})();
+</script>
 </body>
 </html>
